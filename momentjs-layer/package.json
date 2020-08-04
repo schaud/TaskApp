@@ -1,0 +1,16 @@
+{
+  "name": "momentjs-layer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install && mkdir -p nodejs && cp -r node_modules nodejs/ && zip -r moment-layer.zip nodejs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.27.0"
+  }
+}

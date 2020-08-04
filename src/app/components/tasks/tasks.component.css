@@ -1,0 +1,187 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
+*{
+  font-family: 'Raleway', sans-serif;
+  font-weight: 900;
+}
+
+span.psa{
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 550px;
+  font-size: 20px;
+}
+
+/*Flex Container Properties*/
+
+.flex-container{
+  display: flex;
+}
+
+.flex-child:first-child {
+  margin-right: 20px;
+}
+
+/*Material Tab Properties*/
+.mat-tab-group{
+  margin-top: 20px;
+  margin-left: 50px;
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  font-family: 'Raleway', sans-serif;
+  width: 654px;
+  border: 1px solid black;
+  border-radius: 5px;
+  min-height: 660px;
+}
+
+.ng-star-inserted{
+  padding-top: 20px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 900;
+}
+
+::ng-deep.mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled),
+::ng-deep.mat-tab-label.mat-tab-label-active.cdk-keyboard-focused:not(.mat-tab-disabled) {
+  background-color: #3f51b5;
+
+  color: white;
+  opacity: 1;
+}
+
+/*Material Expansion Panel Properties*/
+
+.mat-expansion-panel-header{
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.tab-header{
+  margin-left: 25px;
+}
+
+form{
+  margin-left: 25px;
+}
+
+.task-title{
+  width: 200px;
+}
+.task-desc{
+  width: 100px;
+}
+
+.task-progress{
+  width: 30px;
+}
+
+.expansion-title{
+  display: inline-block;
+  margin-left: 25px;
+  margin-bottom: 10px;
+  width: 250px;
+  text-decoration: underline;
+}
+
+.expansion-name{
+  display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  text-decoration: underline;
+}
+
+.expansion-progress{
+  display: inline-block;
+  width: 30px;
+  margin-bottom: 10px;
+  text-decoration: underline;
+}
+
+.scroll-container{
+  height: 320px;
+}
+
+.create-task-name{
+  width: 500px;
+}
+.create-task-description{
+  width: 500px;
+}
+
+.create-task-progress{
+  width: 100px;
+}
+
+.subtask-expansion{
+  margin-top: 20px;
+
+}
+
+/*Material Card Properties*/
+
+.mat-card{
+  width: 500px;
+  float: left;
+  margin-top: 20px;
+  border: solid black 1px;
+
+}
+
+.task-card-header{
+  background-color: #3f51b5;
+  color: white;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.task-card-title{
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.task-card-date{
+  font-size: 16px;
+  font-weight: bold;
+  float: right;
+}
+
+.task-card-progress{
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.task-card-name{
+  float:right;
+}
+
+.task-card-content{
+  margin-top: 65px;
+  font-size: 16px;
+}
+
+.subtask-name{
+  width: 500px;
+}
+
+.subtask-description{
+  width: 500px;
+}
+
+.subtask-form{
+  margin-left: 0;
+}
+
+
+
+
+
+
+
+
+

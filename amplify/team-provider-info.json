@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-taskapp-dev-212846-authRole",
+            "UnauthRoleArn": "arn:aws:iam::262059594156:role/amplify-taskapp-dev-212846-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::262059594156:role/amplify-taskapp-dev-212846-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "amplify-taskapp-dev-212846-deployment",
+            "UnauthRoleName": "amplify-taskapp-dev-212846-unauthRole",
+            "StackName": "amplify-taskapp-dev-212846",
+            "StackId": "arn:aws:cloudformation:us-east-2:262059594156:stack/amplify-taskapp-dev-212846/0fe92060-d204-11ea-b016-066f8b7a8772",
+            "AmplifyAppId": "d3ggm4l65o1xar"
+        },
+        "categories": {
+            "auth": {
+                "taskappb5ae4c21": {}
+            }
+        }
+    }
+}
