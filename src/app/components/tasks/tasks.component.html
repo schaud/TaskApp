@@ -9,7 +9,9 @@
     <span *ngIf="exists_today" class="expansion-name">Name</span>
     <span *ngIf="exists_today" class="expansion-progress">Progress</span>
     <mat-accordion>
-    <mat-expansion-panel  *ngFor="let task of tasks" (afterExpand)="selectedTask = task; getSubTasks(task.id)">
+    <mat-expansion-panel  *ngFor="let task of tasks"
+            (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true"
+            (afterCollapse)="expanded=false">
       <mat-expansion-panel-header>
         <mat-panel-title class="task-title" >
           {{task.task}}
@@ -40,7 +42,7 @@
 
         <br><br>
 
-        <button (click)="createSubTask();getSubTasks(task.id);getSubTasks(task.id)" mat-raised-button color="primary">Submit Task</button>
+        <button (click)="createSubTask(); updateTask(); getSubTasks(task.id);getSubTasks(task.id)" mat-raised-button color="primary">Submit Task</button>
         <button (click)="toggle()" style="margin-left:10px" mat-raised-button color="warn">Cancel</button>
 
         <br>
@@ -92,7 +94,7 @@
     <h2 class="tab-header">Get Tasks By Name</h2>
 
 
-    <form class="create-form">
+    <form *ngIf="showForm" class="create-form">
 
       <mat-form-field class="create-task-name">
         <mat-label>Name</mat-label>
@@ -105,8 +107,10 @@
     <span *ngIf="exists_byName" class="expansion-title">Task Title</span>
     <span *ngIf="exists_byName" class="expansion-name">Date</span>
     <span *ngIf="exists_byName" class="expansion-progress">Progress</span>
-    <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container">
-    <mat-expansion-panel *cdkVirtualFor="let task of tasksByName">
+      <mat-accordion>
+        <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container-name">
+        <mat-expansion-panel *ngFor="let task of tasksByName" [expanded]="panelOpenState" (afterExpand)="selectedTask = task; getSubTasks(task.id); hideForm2(); expanded=true"
+                         (afterCollapse)="expanded=false; showForm2(); toggle()">
       <mat-expansion-panel-header>
         <mat-panel-title class="task-title">
           {{task.task}}
@@ -118,9 +122,36 @@
           {{task.progress}}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <p>{{task.details}}</p>
+      <p *ngIf="!show" style="margin-top:-25px"><button mat-raised-button color="primary" (click)="toggle()">Add a Subtask</button></p>
+
+      <form *ngIf="show" class="subtask-form">
+
+        <mat-form-field class="subtask-name">
+          <mat-label>Task Name</mat-label>
+          <input [(ngModel)]="subTaskName" name="subTaskName" style="height: 50px" matInput placeholder="ex: Worked on Angular Material" value="">
+        </mat-form-field>
+
+        <br><br>
+
+        <mat-form-field class="subtask-description">
+          <mat-label>Task Description</mat-label>
+          <textarea [(ngModel)]="subTaskDetails" name="newDetails" style="height: 75px" matInput placeholder="ex: Created navigation and expansion panels. Changed the material theme and incorporated mat tabs to better display the data. Incorporated mat forms cleaner UI."></textarea>
+        </mat-form-field>
+
+
+        <br><br>
+
+        <button (click)="createSubTask(); updateTask(); getSubTasks(task.id);getSubTasks(task.id)" mat-raised-button color="primary">Submit Task</button>
+        <button (click)="toggle();togglePanel(); showForm2()" style="margin-left:10px" mat-raised-button color="warn">Cancel</button>
+
+        <br>
+
+      </form>
     </mat-expansion-panel>
     </cdk-virtual-scroll-viewport>
+
+    </mat-accordion>
+
 
     <p *ngIf="!exists_byName && executed_name && name.length > 0"> No tasks available or name does not exist.</p>
 
@@ -133,7 +164,7 @@
     <h2 class="tab-header">Get Tasks By Date</h2>
 
 
-    <form class="create-form">
+    <form *ngIf="showForm" class="create-form">
 
       <mat-form-field class="date-input">
         <mat-label>Date</mat-label>
@@ -148,8 +179,10 @@
     <span *ngIf="exists_byDate" class="expansion-title">Task Title</span>
     <span *ngIf="exists_byDate" class="expansion-name">Name</span>
     <span *ngIf="exists_byDate" class="expansion-progress">Progress</span>
-    <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container">
-    <mat-expansion-panel *cdkVirtualFor="let task of tasksByDate">
+    <mat-accordion>
+    <cdk-virtual-scroll-viewport itemSize="10" class="scroll-container">
+    <mat-expansion-panel *ngFor="let task of tasksByDate" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true"
+                         (afterCollapse)="expanded=false">
       <mat-expansion-panel-header>
         <mat-panel-title class="task-title">
           {{task.task}}
@@ -161,9 +194,34 @@
           {{task.progress}}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <p>{{task.details}}</p>
+      <p *ngIf="!show" style="margin-top:-25px"><button mat-raised-button color="primary" (click)="toggle()">Add a Subtask</button></p>
+
+      <form *ngIf="show" class="subtask-form">
+
+        <mat-form-field class="subtask-name">
+          <mat-label>Task Name</mat-label>
+          <input [(ngModel)]="subTaskName" name="subTaskName" style="height: 50px" matInput placeholder="ex: Worked on Angular Material" value="">
+        </mat-form-field>
+
+        <br><br>
+
+        <mat-form-field class="subtask-description">
+          <mat-label>Task Description</mat-label>
+          <textarea [(ngModel)]="subTaskDetails" name="newDetails" style="height: 75px" matInput placeholder="ex: Created navigation and expansion panels. Changed the material theme and incorporated mat tabs to better display the data. Incorporated mat forms cleaner UI."></textarea>
+        </mat-form-field>
+
+
+        <br><br>
+
+        <button (click)="createSubTask(); updateTask(); getSubTasks(task.id);getSubTasks(task.id)" mat-raised-button color="primary">Submit Task</button>
+        <button (click)="toggle();togglePanel()" style="margin-left:10px" mat-raised-button color="warn">Cancel</button>
+
+        <br>
+
+      </form>
     </mat-expansion-panel>
       </cdk-virtual-scroll-viewport>
+    </mat-accordion>
 
       <p *ngIf="!exists_byDate && executed_date"> No tasks found for this date.</p>
   </mat-tab>
@@ -173,16 +231,18 @@
 </div>
 
 <div class="flex-child">
-<mat-card>
+<mat-card *ngIf="expanded">
 
   <div class="task-card-header">
 
     <span class="task-card-title">{{selectedTask.task}}</span>
-    <span class="task-card-name">{{selectedTask.userid}}</span>
+    <span class = "task-card-date">{{'Updated: ' + selectedTask.taskdate}}</span>
+
 
     <br><br>
     <span class = "task-card-progress">{{'Progress: ' + selectedTask.progress}}</span>
-    <span class = "task-card-date">{{selectedTask.taskdate}}</span>
+    <span class="task-card-name">{{selectedTask.userid}}</span>
+
 
   </div>
   <br>

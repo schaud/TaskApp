@@ -50,10 +50,12 @@ export class TasksComponent implements OnInit {
     {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD"}
   ];
   show: boolean = false;
+  showForm: boolean = true;
   subTaskName: string;
   subTaskDetails: string;
   subTask: any = {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD"};
-
+  expanded: boolean = false;
+  task: any;
 //Utility functions
   swapIdToName(taskList: any) {
     for (let task of taskList) {
@@ -172,6 +174,25 @@ export class TasksComponent implements OnInit {
     this.show = !this.show;
   }
 
+  toggleForm() {
+    this.showForm = !this.showForm;
+  }
+
+  showForm2(){
+    this.showForm = true;
+  }
+
+  hideForm2(){
+    this.showForm = false;
+  }
+
+
+  panelOpenState: boolean = false;
+
+  togglePanel() {
+    this.panelOpenState = !this.panelOpenState
+  }
+
   async createSubTask(){
     this.subTask.taskid = this.selectedTask.id;
     this.subTask.taskdate = this.getCurrentDate();
@@ -180,5 +201,15 @@ export class TasksComponent implements OnInit {
     console.log(this.subTask)
     await this.apiservice.addSubTask(this.subTask.id, this.subTask);
 
+  }
+
+  async updateTask(){
+    this.task.task = this.selectedTask.task;
+    this.task.details = this.selectedTask.details;
+    this.task.id = this.selectedTask.id;
+    this.task.taskdate = this.getCurrentDate();
+    this.task.userid = this.selectedTask.userid;
+    this.task.progress = this.selectedTask.progress;
+    await this.apiservice.updateTask(this.task)
   }
 }

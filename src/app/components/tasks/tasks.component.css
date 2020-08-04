@@ -104,6 +104,10 @@ form{
   height: 320px;
 }
 
+.scroll-container-name{
+  height: 430px;
+}
+
 .create-task-name{
   width: 500px;
 }

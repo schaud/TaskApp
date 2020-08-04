@@ -33,6 +33,10 @@ export class ApiServiceService {
     return this.http.post<any>(`${this.path}/task/`, task).toPromise();
   }
 
+  updateTask(task: any): Promise<any>{
+    return this.http.put<any>(`${this.path}/task/`, task).toPromise();
+  }
+
   getTasksByDate(date): Promise<any> {
     return this.http.get<any>(`${this.path}/task?date=${date}`).toPromise();
   }
