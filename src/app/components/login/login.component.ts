@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   pass = '';
   repass = '';
   emailVerificationMessage: boolean = false;
-
+  error : boolean = false;
 
 
   constructor(private auth: AuthorizationService, private router: Router) { }
@@ -25,9 +25,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  login(){
-    window.location.href = '';
-  }
 
   onSubmit() {
 
@@ -35,14 +32,14 @@ export class LoginComponent implements OnInit {
     const password = this.pass;
 
     this.auth.signIn(this.emailAddress, this.pass).subscribe((data) => {
+      localStorage.setItem('userEmail',this.emailAddress);
       this.router.navigateByUrl('/home');
     }, (err)=> {
       this.emailVerificationMessage = true;
+      this.error = true;
     });
+
   }
-
-
-
 
 
   // async loginAuth() {

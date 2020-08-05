@@ -182,6 +182,31 @@ form{
 }
 
 
+.card-expansion-title{
+  display: inline-block;
+  margin-left: 30px;
+  margin-bottom: 10px;
+  width: 120px;
+  text-decoration: underline;
+}
+
+.card-expansion-date{
+  display: inline-block;
+  margin-left: 105px;
+  margin-bottom: 10px;
+  width: 120px;
+  text-decoration: underline;
+}
+
+.card-expansion-progress{
+  margin-left: 5px;
+  display: inline-block;
+  width: 30px;
+  margin-bottom: 10px;
+  text-decoration: underline;
+}
+
+
 
 
 

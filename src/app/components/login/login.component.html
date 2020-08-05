@@ -112,6 +112,7 @@
               </mat-error>
               <mat-icon matSuffix>lock</mat-icon>
             </mat-form-field>
+            <p *ngIf="error" style="color: red"> Invalid Username or Password</p>
             <button
               mat-raised-button
               color="primary"

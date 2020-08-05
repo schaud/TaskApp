@@ -2,6 +2,7 @@ import {Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core
 import { ApiServiceService} from '../../services/api-service.service';
 import * as moment from 'moment';
 import {MatExpansionPanel} from '@angular/material/expansion';
+import {AuthorizationService} from '../../services/authorization.service';
 
 
 @Component({
@@ -11,7 +12,7 @@ import {MatExpansionPanel} from '@angular/material/expansion';
 })
 export class TasksComponent implements OnInit {
 
-  constructor(private apiservice: ApiServiceService) {
+  constructor(private apiservice: ApiServiceService, private auth: AuthorizationService) {
   }
 
   ngOnInit(): void {
@@ -26,6 +27,7 @@ export class TasksComponent implements OnInit {
 //Variables and sample jsons
 //   @ViewChild('panel') panel:MatExpansionPanel;
 
+  currentUser = localStorage.getItem('userEmail');
   selectedTask: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
   momentDate = moment.utc().utcOffset(-5).format('YYYY-MM-DD');
   name: String;
@@ -55,7 +57,7 @@ export class TasksComponent implements OnInit {
   subTaskDetails: string;
   subTask: any = {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD"};
   expanded: boolean = false;
-  task: any;
+  task: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
 //Utility functions
   swapIdToName(taskList: any) {
     for (let task of taskList) {
@@ -70,6 +72,17 @@ export class TasksComponent implements OnInit {
     let result;
     for (let user of this.usernames) {
       if (user.name == username) {
+        result = user.id;
+      }
+    }
+    console.log('The ID is ' + result)
+    return result;
+  }
+
+  getIdFromEmail(email) {
+    let result;
+    for (let user of this.usernames) {
+      if (user.email == email) {
         result = user.id;
       }
     }
@@ -111,13 +124,15 @@ export class TasksComponent implements OnInit {
       this.exists_today = false;
       console.log("No such Task ID exists")
     } else this.exists_today = true;
+    console.log('Authenitcated User')
+    console.log(this.currentUser)
     return this.tasks;
   }
 
   async submitTasks() {
     this.newTaskReport.taskdate = this.getCurrentDate();
-    this.newTaskReport.id = '7';
-    this.newTaskReport.userid = '0';
+    this.newTaskReport.id = '0';
+    this.newTaskReport.userid = this.getIdFromEmail(this.currentUser);
     this.newTaskReport.details = this.newDetails;
     this.newTaskReport.task = this.newTask;
     this.newTaskReport.progress = this.newProgress;
@@ -174,10 +189,6 @@ export class TasksComponent implements OnInit {
     this.show = !this.show;
   }
 
-  toggleForm() {
-    this.showForm = !this.showForm;
-  }
-
   showForm2(){
     this.showForm = true;
   }
@@ -208,8 +219,10 @@ export class TasksComponent implements OnInit {
     this.task.details = this.selectedTask.details;
     this.task.id = this.selectedTask.id;
     this.task.taskdate = this.getCurrentDate();
-    this.task.userid = this.selectedTask.userid;
+    this.task.userid = this.getIdFromName(this.selectedTask.userid);
     this.task.progress = this.selectedTask.progress;
     await this.apiservice.updateTask(this.task)
+    console.log('Update');
+    console.log(this.task);
   }
 }

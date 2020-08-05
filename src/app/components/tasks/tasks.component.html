@@ -137,12 +137,18 @@
           <mat-label>Task Description</mat-label>
           <textarea [(ngModel)]="subTaskDetails" name="newDetails" style="height: 75px" matInput placeholder="ex: Created navigation and expansion panels. Changed the material theme and incorporated mat tabs to better display the data. Incorporated mat forms cleaner UI."></textarea>
         </mat-form-field>
-
-
         <br><br>
 
-        <button (click)="createSubTask(); updateTask(); getSubTasks(task.id);getSubTasks(task.id)" mat-raised-button color="primary">Submit Task</button>
-        <button (click)="toggle();togglePanel(); showForm2()" style="margin-left:10px" mat-raised-button color="warn">Cancel</button>
+        <button (click)=
+                  "createSubTask(); updateTask();
+                  getSubTasks(task.id);getSubTasks(task.id);
+                  togglePanel(); toggle(); showForm2();
+                  getTasksByName(name); getTasksToday()" mat-raised-button color="primary">Submit Task
+        </button>
+
+        <button (click)="toggle();
+        togglePanel(); showForm2()" style="margin-left:10px" mat-raised-button color="warn">Cancel
+        </button>
 
         <br>
 
@@ -182,7 +188,7 @@
     <mat-accordion>
     <cdk-virtual-scroll-viewport itemSize="10" class="scroll-container">
     <mat-expansion-panel *ngFor="let task of tasksByDate" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true"
-                         (afterCollapse)="expanded=false">
+                         (afterCollapse)="expanded=false; showForm2(); toggle()">
       <mat-expansion-panel-header>
         <mat-panel-title class="task-title">
           {{task.task}}
@@ -213,8 +219,14 @@
 
         <br><br>
 
-        <button (click)="createSubTask(); updateTask(); getSubTasks(task.id);getSubTasks(task.id)" mat-raised-button color="primary">Submit Task</button>
-        <button (click)="toggle();togglePanel()" style="margin-left:10px" mat-raised-button color="warn">Cancel</button>
+        <button (click)=
+                  "createSubTask(); updateTask();
+                  getSubTasks(task.id);getSubTasks(task.id);
+                  getTasksByDate(); getTasksToday();
+                  togglePanel(); toggle(); showForm2();" mat-raised-button color="primary">Submit Task
+        </button>
+        <button (click)="toggle();togglePanel();showForm2()" style="margin-left:10px" mat-raised-button color="warn">Cancel
+        </button>
 
         <br>
 
@@ -249,9 +261,11 @@
   <div class="task-card-content">{{selectedTask.details}}</div>
 
   <div class="subtask-expansion">
-    <span class="expansion-title">Subtask</span>
-    <span class="expansion-name">Date</span>
-  <mat-accordion>
+    <span class="card-expansion-title">Subtask</span>
+    <span class="card-expansion-date">Date</span>
+    <span class="card-expansion-progress">Progress</span>
+
+    <mat-accordion>
   <mat-expansion-panel *ngFor="let subTask of subTasks">
     <mat-expansion-panel-header>
       <mat-panel-title style="margin-bottom: 10px;" class="task-title">
@@ -259,6 +273,9 @@
       </mat-panel-title>
       <mat-panel-description class="task-desc">
         {{subTask.taskdate}}
+      </mat-panel-description>
+      <mat-panel-description class="task-progress" >
+        {{subTask.progress}}
       </mat-panel-description>
     </mat-expansion-panel-header>
     <p>{{subTask.details}}</p>
