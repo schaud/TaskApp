@@ -20,9 +20,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { AmplifyService, AmplifyAngularModule } from 'aws-amplify-angular';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-
-
-
+import { ForgotComponent } from './components/dialog/forgot/forgot.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { SubtaskComponent } from './components/dialog/subtask/subtask.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 
 @NgModule({
@@ -30,27 +32,33 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     AppComponent,
     TasksComponent,
     LoginComponent,
+    ForgotComponent,
+    SubtaskComponent,
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        RouterModule,
-        AppRoutingModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatSliderModule,
-        MatCardModule,
-        MatTabsModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatExpansionModule,
-        AmplifyAngularModule,
-        ScrollingModule
-    ],
+  entryComponents: [ForgotComponent],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    RouterModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
+    MatCardModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    AmplifyAngularModule,
+    ScrollingModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+  ],
   providers: [HttpClient, AmplifyService],
   bootstrap: [AppComponent]
 })

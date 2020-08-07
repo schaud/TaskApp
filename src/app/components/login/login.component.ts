@@ -3,8 +3,8 @@ import { Auth } from 'aws-amplify';
 import {AmplifyService} from 'aws-amplify-angular';
 import {AuthorizationService} from '../../services/authorization.service';
 import { Router } from '@angular/router';
-
-
+import {ForgotComponent} from '../dialog/forgot/forgot.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -18,9 +18,10 @@ export class LoginComponent implements OnInit {
   repass = '';
   emailVerificationMessage: boolean = false;
   error : boolean = false;
+  match: boolean;
 
 
-  constructor(private auth: AuthorizationService, private router: Router) { }
+  constructor(private auth: AuthorizationService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -38,6 +39,19 @@ export class LoginComponent implements OnInit {
       this.emailVerificationMessage = true;
       this.error = true;
     });
+
+  }
+
+  openDialog(){
+    let newPass;
+    let dialogRef = this.dialog.open(ForgotComponent, {data : {email: this.emailAddress}});
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result.data}`);
+      newPass = result.data;
+    })
+
+    return newPass;
+
 
   }
 

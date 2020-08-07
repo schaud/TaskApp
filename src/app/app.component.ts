@@ -29,7 +29,7 @@ export class AppComponent implements OnInit, OnDestroy{
   logout2(){
     this.auth.logOut();
     localStorage.clear();
-    this.router.navigateByUrl('login');
+    this.router.navigateByUrl('');
   }
 
 

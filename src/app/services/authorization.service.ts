@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import {AuthenticationDetails, CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
+import Observable from 'zen-observable';
+
+
+import {MatDialog} from '@angular/material/dialog';
+import {ForgotComponent} from '../components/dialog/forgot/forgot.component';
 
 const poolData = {
   UserPoolId: 'us-east-2_JQy9YBUJg', // Your user pool id here
@@ -9,13 +14,18 @@ const poolData = {
 
 const userPool = new CognitoUserPool(poolData);
 
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
   cognitoUser: any;
 
-  constructor() { }
+
+  constructor(public dialog: MatDialog) {
+
+  }
 
   register(email, password) {
 
@@ -39,8 +49,8 @@ export class AuthorizationService {
 
   confirmAuthCode(code) {
     const user = {
-      Username : this.cognitoUser.username,
-      Pool : userPool
+      Username: this.cognitoUser.username,
+      Pool: userPool
     };
     return new Observable(observer => {
       const cognitoUser = new CognitoUser(user);
@@ -58,22 +68,24 @@ export class AuthorizationService {
 
   signIn(email, password) {
 
+    let self = this;
+
     const authenticationData = {
-      Username : email,
-      Password : password,
+      Username: email,
+      Password: password,
     };
     const authenticationDetails = new AuthenticationDetails(authenticationData);
 
     const userData = {
-      Username : email,
-      Pool : userPool
+      Username: email,
+      Pool: userPool
     };
     const cognitoUser = new CognitoUser(userData);
 
     return new Observable(observer => {
 
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function (result) {
+        onSuccess: function(result) {
 
           //console.log(result);
           observer.next(result);
@@ -83,8 +95,9 @@ export class AuthorizationService {
           console.log(err);
           observer.error(err);
         },
-        newPasswordRequired: function (userAttributes) {
-          let newPassword = prompt('Enter a new password.')
+        newPasswordRequired: function(userAttributes) {
+          let newPassword = self.openDialog(userData.Username);
+          let gg = userData.Username;
           delete userAttributes.email_verified;
           cognitoUser.completeNewPasswordChallenge(newPassword, userAttributes, this);
         }
@@ -105,5 +118,20 @@ export class AuthorizationService {
     this.getAuthenticatedUser().signOut();
     this.cognitoUser = null;
   }
+
+  openDialog(email){
+    let newPassword = '';
+    let dialogRef = this.dialog.open(ForgotComponent, {data : {email: email}});
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result.data}`);
+      newPassword = result.data;
+    })
+
+    return newPassword;
+
+  }
+
+
 
 }

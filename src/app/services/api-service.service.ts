@@ -41,8 +41,8 @@ export class ApiServiceService {
     return this.http.get<any>(`${this.path}/task?date=${date}`).toPromise();
   }
 
-  getTasksByUserId(id): Promise<any> {
-    return this.http.get<any>(`${this.path}/task?id=${id}`).toPromise();
+  getTasksByUserId(userid): Promise<any> {
+    return this.http.get<any>(`${this.path}/task?userid=${userid}`).toPromise();
   }
 
   getTaskByDateAndId(id, date): Promise<any> {
