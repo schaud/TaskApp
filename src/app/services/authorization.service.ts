@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {AuthenticationDetails, CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
 // import { Observable } from 'rxjs/Observable';
 import Observable from 'zen-observable';
+import { BehaviorSubject} from "rxjs";
+
 
 
 import {MatDialog} from '@angular/material/dialog';
@@ -16,10 +18,13 @@ const userPool = new CognitoUserPool(poolData);
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
+  private user = new BehaviorSubject('');
+  sharedUser = this.user.asObservable();
   cognitoUser: any;
 
 
@@ -131,6 +136,12 @@ export class AuthorizationService {
     return newPassword;
 
   }
+
+  sendUser(user: string){
+    this.user.next(user)
+  }
+
+
 
 
 

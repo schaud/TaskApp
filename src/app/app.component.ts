@@ -16,10 +16,12 @@ export class AppComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
       this.timer = setInterval(() => {this.time = new Date();}, 1000);
+      this.auth.sharedUser.subscribe(user => this.user = user);
   }
 
   time = new Date();
   timer;
+  user: string = '';
 
 
   logout(){
@@ -29,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy{
   logout2(){
     this.auth.logOut();
     localStorage.clear();
+    this.user = '';
     this.router.navigateByUrl('');
   }
 

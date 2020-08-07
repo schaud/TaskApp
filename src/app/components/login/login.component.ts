@@ -19,11 +19,13 @@ export class LoginComponent implements OnInit {
   emailVerificationMessage: boolean = false;
   error : boolean = false;
   match: boolean;
+  user: string;
 
 
   constructor(private auth: AuthorizationService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.auth.sharedUser.subscribe(user => this.user = user);
   }
 
 
@@ -34,6 +36,9 @@ export class LoginComponent implements OnInit {
 
     this.auth.signIn(this.emailAddress, this.pass).subscribe((data) => {
       localStorage.setItem('userEmail',this.emailAddress);
+      this.user = this.emailAddress;
+      this.auth.sendUser(this.user);
+
       this.router.navigateByUrl('/home');
     }, (err)=> {
       this.emailVerificationMessage = true;
