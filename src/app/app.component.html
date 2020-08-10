@@ -5,10 +5,10 @@
 
 
 
-  <button color="accent" class="logout" mat-raised-button (click)="logout2()">Logout</button>
+  <button color="accent" class="logout" mat-raised-button (click) ="logout2()" *ngIf="loggedIn">Logout</button>
   <span class="est-time">{{ time | date: 'hh:mm:ss a' }} {{' EST'}}</span>
   <span class="app-info">Task App: beta v1.0</span>
-  <span class="user">Welcome, Sharjeel.Chaudhry@lntinfotech.com </span>
+  <span class="user" *ngIf="user">Welcome, {{user}}</span>
 
 
 

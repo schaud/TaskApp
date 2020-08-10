@@ -86,7 +86,7 @@
       <br>
     </form>
 
-    <p *ngIf="!exists_byName && executed_name && name.length > 0" style="margin-left: 20px;"> No tasks available or name does not exist.</p>
+    <p *ngIf="!exists_byName && executed_name && name.length > 0 && complete" style="margin-left: 20px;"> No tasks available or name does not exist.</p>
 
 
     <span *ngIf="exists_byName" class="expansion-title">Task Title</span>
@@ -138,7 +138,7 @@
 
     </form>
 
-    <p *ngIf="!exists_byDate && executed_date" style="margin-left: 20px"> No tasks found for this date.</p>
+    <p *ngIf="!exists_byDate && executed_date && complete" style="margin-left: 20px"> No tasks found for this date.</p>
 
 
 
@@ -175,7 +175,11 @@
 </div>
 
 <div class="flex-child">
-<mat-card *ngIf="expanded">
+  <div style="margin-left: 175px; margin-top:175px" *ngIf="expanded && !complete">
+    <mat-spinner  color="accent"></mat-spinner>
+  </div>
+
+<mat-card *ngIf="expanded && complete">
 
   <div class="task-card-header">
 

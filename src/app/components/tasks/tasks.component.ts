@@ -63,6 +63,7 @@ export class TasksComponent implements OnInit {
   showSpinnerName: boolean = false;
   showSpinnerDate: boolean = false;
   badPercent: boolean = false;
+  complete: boolean = false;
 
 
 
@@ -184,6 +185,7 @@ export class TasksComponent implements OnInit {
 
 
   async getTasksByDate() {
+    this.complete = false;
     this.showSpinnerDate = true;
     this.executed_date = true;
     await this.getUsernames();
@@ -196,12 +198,13 @@ export class TasksComponent implements OnInit {
     } else this.exists_byDate = true;
     console.log(this.exists_byDate)
     this.showSpinnerDate = false;
+    this.complete = true;
     return this.tasksByDate;
   }
 
   async getTasksByName(name) {
     this.showSpinnerName = true;
-
+    this.complete = false;
     this.executed_name = true;
     await this.getUsernames();
     let id = this.getIdFromName(name);
@@ -214,7 +217,7 @@ export class TasksComponent implements OnInit {
     } else this.exists_byName = true;
     this.sortData(this.tasksByName);
     this.showSpinnerName = false;
-
+    this.complete = true;
     return this.tasksByName;
   }
 
@@ -225,6 +228,7 @@ export class TasksComponent implements OnInit {
     console.log(this.subTasks)
     this.sortData(this.subTasks);
     this.showSpinner = false;
+    this.complete = true;
     return this.subTasks;
   }
 

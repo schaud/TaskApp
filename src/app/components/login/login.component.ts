@@ -20,24 +20,26 @@ export class LoginComponent implements OnInit {
   error : boolean = false;
   match: boolean;
   user: string;
+  loggedIn: boolean = false;
 
 
   constructor(private auth: AuthorizationService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.auth.sharedUser.subscribe(user => this.user = user);
+    this.auth.sharedLoggedIn.subscribe(loggedIn => this.loggedIn = loggedIn);
+
   }
 
 
   onSubmit() {
 
-    const email = this.emailAddress;
-    const password = this.pass;
-
     this.auth.signIn(this.emailAddress, this.pass).subscribe((data) => {
       localStorage.setItem('userEmail',this.emailAddress);
       this.user = this.emailAddress;
       this.auth.sendUser(this.user);
+      this.loggedIn = true;
+      this.auth.sendState(this.loggedIn);
 
       this.router.navigateByUrl('/home');
     }, (err)=> {

@@ -17,20 +17,19 @@ const poolData = {
 const userPool = new CognitoUserPool(poolData);
 
 
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
   private user = new BehaviorSubject('');
+  private loggedIn = new BehaviorSubject(false)
   sharedUser = this.user.asObservable();
+  sharedLoggedIn = this.loggedIn.asObservable();
   cognitoUser: any;
+  newPassword;
 
 
-  constructor(public dialog: MatDialog) {
-
-  }
+  constructor(public dialog: MatDialog) { }
 
   register(email, password) {
 
@@ -71,7 +70,7 @@ export class AuthorizationService {
     });
   }
 
-  signIn(email, password) {
+   signIn(email, password) {
 
     let self = this;
 
@@ -100,9 +99,10 @@ export class AuthorizationService {
           console.log(err);
           observer.error(err);
         },
-        newPasswordRequired: function(userAttributes) {
-          let newPassword = self.openDialog(userData.Username);
-          let gg = userData.Username;
+        newPasswordRequired: async function(userAttributes) {
+          let newPassword = await self.openDialog(userData.Username);
+          console.log('The new password is')
+          console.log(newPassword)
           delete userAttributes.email_verified;
           cognitoUser.completeNewPasswordChallenge(newPassword, userAttributes, this);
         }
@@ -124,21 +124,23 @@ export class AuthorizationService {
     this.cognitoUser = null;
   }
 
-  openDialog(email){
-    let newPassword = '';
+    async openDialog(email): Promise <any>{
     let dialogRef = this.dialog.open(ForgotComponent, {data : {email: email}});
+    let password: string = '';
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result.data}`);
-      newPassword = result.data;
-    })
-
-    return newPassword;
-
-  }
+      return dialogRef.afterClosed().toPromise().then(result => {
+       this.newPassword = result.data;
+       console.log(`New password is: ${password}`);
+       return Promise.resolve(result.data)
+      });
+    }
 
   sendUser(user: string){
     this.user.next(user)
+  }
+
+  sendState(state: boolean){
+    this.loggedIn.next(state)
   }
 
 
