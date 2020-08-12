@@ -329,5 +329,10 @@ export class TasksComponent implements OnInit {
 
   }
 
-
+  // percentToDecimal(percent){
+  //   let parsePercent = parseFloat(percent);
+  //   let decimal = parsePercent / 100
+  //   console.log(typeof (decimal))
+  //   return(decimal);
+  // }
 }
