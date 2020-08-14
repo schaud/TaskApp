@@ -233,9 +233,13 @@
 
 
 
+
+
+
+
 <!--Mobile View -->
 
-
+<!-- Today View -->
 
 <mat-card class="mobile-view" *ngIf="scrWidth < 599">
 
@@ -247,7 +251,7 @@
 
 
   <div *ngIf="Stoday">
-    <span *ngIf="complete" style="margin-left: 30px; text-decoration: underline">Task Title</span>
+    <span *ngIf="complete" style="margin-left: 30px; text-decoration: underline">Task</span>
     <span *ngIf="complete" style="margin-left: 150px; text-decoration: underline">Name</span>
     <span *ngIf="complete" style="margin-left: 50px; text-decoration: underline">Progress</span>
   <mat-accordion>
@@ -265,6 +269,7 @@
           {{task.progress}}
         </mat-panel-description>
       </mat-expansion-panel-header>
+      <br>
       <p style="margin-top:-25px">
         <button mat-raised-button color="primary"
                 (click)="openDialog()">Add a Subtask</button></p>
@@ -335,7 +340,7 @@
       <br>
     </form>
 
-    <span *ngIf="complete" style="margin-left: 30px; text-decoration: underline">Task Title</span>
+    <span *ngIf="complete" style="margin-left: 30px; text-decoration: underline">Task</span>
     <span *ngIf="complete" style="margin-left: 150px; text-decoration: underline">Name</span>
     <span *ngIf="complete" style="margin-left: 50px; text-decoration: underline">Progress</span>
 
@@ -360,6 +365,7 @@
               {{task.progress}}
             </mat-panel-description>
           </mat-expansion-panel-header>
+          <br>
           <p style="margin-top:-25px">
             <button mat-raised-button color="primary" (click)="openDialog()">Add a Subtask</button></p>
           <mat-spinner *ngIf="showSpinner" color="accent" class="sub-task-spinner"></mat-spinner>
@@ -400,7 +406,7 @@
 
 
     </form>
-    <span *ngIf="complete" style="margin-left: 30px; text-decoration: underline">Task Title</span>
+    <span *ngIf="complete" style="margin-left: 30px; text-decoration: underline">Task</span>
     <span *ngIf="complete" style="margin-left: 150px; text-decoration: underline">Name</span>
     <span *ngIf="complete" style="margin-left: 50px; text-decoration: underline">Progress</span>
 
@@ -424,6 +430,7 @@
               {{task.progress}}
             </mat-panel-description>
           </mat-expansion-panel-header>
+          <br>
           <p style="margin-top:-25px">
             <button mat-raised-button color="primary" (click)="openDialog()">Add a Subtask</button></p>
           <mat-spinner *ngIf="showSpinner" color="accent" class="sub-task-spinner"></mat-spinner>
@@ -448,8 +455,5 @@
     </mat-accordion>
 
   </div>
-
-
-
 
 </mat-card>
