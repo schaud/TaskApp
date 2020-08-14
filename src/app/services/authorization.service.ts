@@ -21,6 +21,7 @@ const userPool = new CognitoUserPool(poolData);
   providedIn: 'root'
 })
 export class AuthorizationService {
+
   private user = new BehaviorSubject('');
   private loggedIn = new BehaviorSubject(false)
   sharedUser = this.user.asObservable();
@@ -142,6 +143,22 @@ export class AuthorizationService {
   sendState(state: boolean){
     this.loggedIn.next(state)
   }
+
+  // pushCreate(){
+  //   return this.create.asObservable();
+  // }
+  //
+  // pushToday(){
+  //   return this.today.asObservable();
+  // }
+  //
+  // pushDate(){
+  //   return this.date.asObservable();
+  // }
+  //
+  // pushName(){
+  //   return this.name.asObservable();
+  // }
 
 
 

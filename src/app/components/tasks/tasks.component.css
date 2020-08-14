@@ -31,7 +31,7 @@ span.psa{
   /*margin-left: auto;*/
   /*margin-right: auto;*/
   font-family: 'Raleway', sans-serif;
-  width: 654px;
+  /*width: 654px;*/
   border: 1px solid black;
   border-radius: 5px;
   min-height: 660px;
@@ -214,6 +214,23 @@ form{
   position: absolute;
 }
 
+
+@media (max-width: 600px){
+  mat-tab-group{
+    display:none;
+  }
+  span.psa{
+    display: none;
+  }
+  .subtask-view{
+    display: none;
+  }
+}
+
+.mobile-view{
+  margin: 20px;
+  width: 420px;
+}
 
 
 

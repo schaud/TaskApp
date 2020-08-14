@@ -25,6 +25,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { SubtaskComponent } from './components/dialog/subtask/subtask.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { NavComponent } from './components/nav/nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -34,6 +38,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     LoginComponent,
     ForgotComponent,
     SubtaskComponent,
+    NavComponent,
   ],
   entryComponents: [ForgotComponent],
   imports: [
@@ -58,6 +63,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatDialogModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    MatSidenavModule,
+    LayoutModule,
+    MatListModule,
   ],
   providers: [HttpClient, AmplifyService],
   bootstrap: [AppComponent]

@@ -10,35 +10,28 @@
 
 .mat-toolbar{
   /*position: sticky;*/
-  top: 0;
-  z-index: 1;
-  overflow: hidden;
-  display: inline-block;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 
 }
 
 #logo{
-  margin-top: 10px;
-  height: 65%;
-  float:left;
+  position: absolute;
+  top: 12px;
+  height: 5%;
 }
 
 #logo2{
-  margin-top: 20px;
   position: absolute;
-  float:left;
-  padding-left: 15px;
-  height: 3%;
+  margin-left: 90px;
+  top: 25px;
+  height: 2.5%;
 }
 
 span.user{
-  float: right;
-  margin-right: 27%;
-  margin-top: 18px;
-  margin-left: 20px;
-
+  left: 250px;
+  top: 20px;
+  position: absolute;
 }
 
 h1{
@@ -47,26 +40,43 @@ h1{
 }
 
 .logout{
-  float: right;
-  margin-top: 15px;
+
   font-weight: 900;
   margin-right: 10px;
 
 }
 
 span.est-time{
-  float: right;
   margin-right: 30px;
-  margin-top: 18px;
+  top: 25px;
   font-size: 20px;
 }
 
 span.app-info{
-  float: right;
   margin-right: 35px;
-  margin-top: 18px;
+  top: 25px;
   font-size: 20px;
 }
+
+@media (max-width: 1180px){
+  .user{
+    display: none;
+  }
+}
+
+@media (max-width: 768px){
+  .app-info, .est-time{
+    display: none;
+  }
+}
+
+@media (max-width: 500px){
+  #logo{
+    top: 8px;
+  }
+}
+
+
 
 
 

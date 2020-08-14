@@ -1,10 +1,13 @@
-import {ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, HostListener, Input} from '@angular/core';
 import { ApiServiceService} from '../../services/api-service.service';
 import * as moment from 'moment';
 import {MatDialog} from '@angular/material/dialog';
 import {SubtaskComponent} from '../dialog/subtask/subtask.component';
 import {PageEvent} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import {AuthorizationService} from '../../services/authorization.service';
+import {Observable} from 'rxjs';
+import {DataService} from '../../services/data.service';
 
 
 
@@ -15,26 +18,44 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 export class TasksComponent implements OnInit {
 
+  Stoday: boolean;
+  Screate: boolean;
+  Sdate: boolean;
+  Sname: boolean;
+
+  scrHeight:any;
+  scrWidth:any;
+
+  constructor(private apiservice: ApiServiceService,
+              public dialog: MatDialog,
+              private auth: AuthorizationService,
+              private data: DataService) {
+    this.getScreenSize();
+  }
+
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.scrHeight = window.innerHeight;
+    this.scrWidth = window.innerWidth;
+    console.log(this.scrHeight, this.scrWidth);
+  }
+
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   currentItemsToShow: [];
   pageSize = 3; // number of cards per page
-
-
-
-
-  constructor(private apiservice: ApiServiceService, public dialog: MatDialog, private changeDetectorRef: ChangeDetectorRef) {
-  }
 
 
   ngOnInit(): void {
     this.getTasksToday();
     this.getCurrentDate();
     this.currentItemsToShow = this.subTasks.slice(0, this.pageSize);
-    this.changeDetectorRef.detectChanges();
 
-
+    this.data.sharedToday.subscribe(Stoday => this.Stoday = Stoday);
+    this.data.sharedCreate.subscribe(Screate => this.Screate = Screate);
+    this.data.sharedDate.subscribe(Sdate => this.Sdate = Sdate);
+    this.data.sharedName.subscribe(Sname => this.Sname = Sname);
   }
-
 
 //Variables: General and Application State
   currentUser = localStorage.getItem('userEmail');
@@ -223,12 +244,13 @@ export class TasksComponent implements OnInit {
 
   async getSubTasks(taskId) {
     this.showSpinner = true;
+    this.complete = false;
     this.subTasks = await this.apiservice.getSubTasks(taskId);
     console.log('Subtasks');
     console.log(this.subTasks)
     this.sortData(this.subTasks);
-    this.showSpinner = false;
     this.complete = true;
+    this.showSpinner = false;
     return this.subTasks;
   }
 
@@ -317,17 +339,23 @@ export class TasksComponent implements OnInit {
       });
     }
 
-    pageSlice = this.subTasks.slice(0,4);
 
-  onPageChange($event){
-    this.currentItemsToShow = this.subTasks;
-    this.currentItemsToShow = this.subTasks.slice(
-      $event.pageIndex * $event.pageSize,
-      $event.pageIndex * $event.pageSize +
-      $event.pageSize
-    );
+}
 
-  }
+
+
+
+  //   pageSlice = this.subTasks.slice(0,4);
+  //
+  // onPageChange($event){
+  //   this.currentItemsToShow = this.subTasks;
+  //   this.currentItemsToShow = this.subTasks.slice(
+  //     $event.pageIndex * $event.pageSize,
+  //     $event.pageIndex * $event.pageSize +
+  //     $event.pageSize
+  //   );
+  //
+  // }
 
   // percentToDecimal(percent){
   //   let parsePercent = parseFloat(percent);
@@ -335,4 +363,4 @@ export class TasksComponent implements OnInit {
   //   console.log(typeof (decimal))
   //   return(decimal);
   // }
-}
+
