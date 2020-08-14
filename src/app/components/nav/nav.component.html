@@ -1,0 +1,37 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [ngClass] = "{hidden: (isHandset$ | async) === false}"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>LTI Task App</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item (click)="showToday()">Today's Tasks</a>
+      <a mat-list-item (click)="showCreate()">Create a Task</a>
+      <a mat-list-item (click)="showName()">Search Tasks By Name</a>
+      <a mat-list-item (click)="showDate()">Search Tasks By Date</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="(isHandset$ | async) ">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+<!--      <span>Task App</span>-->
+      <span><img id="logo" src="/assets/LTI_Lets_solve_logo_white_png.png" alt="LTI"></span>
+      <span><img id="logo2" src="/assets/LTI_Lets_solve_logo_white_png%202.png" alt="Lets Solve"></span>
+      <span class="spacer"></span>
+      <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" *ngIf="user" class="user">{{user}}</li>
+      <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" class="est-time">{{ time | date: 'hh:mm:ss a' }} {{' EST'}}</li>
+      <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" class="app-info">Task App: beta v1.0</li>
+      <li><button color="accent" class="logout" mat-raised-button (click) ="logout2()" *ngIf="loggedIn">Logout</button></li>
+    </mat-toolbar>
+    <ng-content></ng-content>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
