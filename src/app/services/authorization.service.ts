@@ -24,8 +24,11 @@ export class AuthorizationService {
 
   private user = new BehaviorSubject('');
   private loggedIn = new BehaviorSubject(false)
+  private invalid = new BehaviorSubject(false)
+
   sharedUser = this.user.asObservable();
   sharedLoggedIn = this.loggedIn.asObservable();
+  sharedInvalid = this.invalid.asObservable();
   cognitoUser: any;
   newPassword;
 

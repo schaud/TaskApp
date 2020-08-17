@@ -31,6 +31,7 @@
                 (click)="openDialog()">Add a Subtask</button></p>
     </mat-expansion-panel>
     </mat-accordion>
+    <p *ngIf="tasks.length === 0" style="margin-left: auto; margin-right: auto; width: fit-content">No tasks have been posted today.</p>
   </mat-tab>
 
 <!-- Second Tab -->
@@ -179,6 +180,11 @@
     <mat-spinner  color="accent"></mat-spinner>
   </div>
 
+  <div *ngIf="!expanded && !complete">
+    <h2 style="margin-right: auto; margin-left: auto; width: fit-content; text-decoration: underline">How this application was built</h2>
+    <img src="assets/stack.png" style="height: 700px">
+  </div>
+
 <mat-card *ngIf="expanded && complete">
 
   <div class="task-card-header">
@@ -191,10 +197,10 @@
     <span class = "task-card-progress">{{'Progress: ' + selectedTask.progress}}</span>
     <span class="task-card-name">{{selectedTask.userid}}</span>
 
-
   </div>
   <br>
-  <div class="task-card-content">{{selectedTask.details}}</div>
+
+  <div class="task-card-content" style="padding-top: 20px">{{selectedTask.details}}</div>
 
   <div class="subtask-expansion">
     <span class="card-expansion-title">Subtask</span>
@@ -292,6 +298,7 @@
       </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
+    <p *ngIf="tasks.length === 0" style="margin-left: auto; margin-right: auto; width: fit-content">No tasks have been posted today.</p>
   </div>
 
   <!--Mobile create -->

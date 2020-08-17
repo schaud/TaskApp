@@ -32,7 +32,7 @@
               </mat-error>
               <mat-error
                 *ngIf="password.errors && password.errors.minlength">
-                Password must be of length 8
+                Password must be of minimum length 8
               </mat-error>
               <mat-icon matSuffix>lock</mat-icon>
             </mat-form-field>
@@ -44,6 +44,7 @@
               Sign In
             </button>
           </form>
+          <mat-error *ngIf="error" style="margin-left: auto; margin-right: auto; width: fit-content">Invalid username or password!</mat-error>
         </mat-card-content>
       </mat-tab>
       <mat-tab label="Admin">
@@ -91,7 +92,7 @@
               </mat-error>
               <mat-error
                 *ngIf="password.errors && password.errors.minlength">
-                Password must be of length 8
+                Password must be of minimum length 8
               </mat-error>
               <mat-icon matSuffix>lock</mat-icon>
 
