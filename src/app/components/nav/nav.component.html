@@ -1,16 +1,26 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container  class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [ngClass] = "{hidden: (isHandset$ | async) === false}"
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>LTI Task App</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item (click)="showToday()">Today's Tasks</a>
-      <a mat-list-item (click)="showCreate()">Create a Task</a>
-      <a mat-list-item (click)="showName()">Search Tasks By Name</a>
-      <a mat-list-item (click)="showDate()">Search Tasks By Date</a>
+    <mat-toolbar >LTI Task App</mat-toolbar>
+
+
+    <mat-nav-list *ngIf="loggedIn">
+      <a  mat-list-item (click)="showToday(); drawer.toggle()">Today's Tasks</a>
+      <a  mat-list-item (click)="showCreate(); drawer.toggle()">Create a Task</a>
+      <a  mat-list-item (click)="showName(); drawer.toggle()">Search Tasks By Name</a>
+      <a  mat-list-item (click)="showDate(); drawer.toggle()">Search Tasks By Date</a>
     </mat-nav-list>
+
+    <mat-nav-list *ngIf="!loggedIn">
+      <a mat-list-item (click)="drawer.toggle()" routerLink="/">Log in</a>
+    </mat-nav-list>
+
+
+
+
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">

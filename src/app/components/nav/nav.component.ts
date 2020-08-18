@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import {AuthorizationService} from '../../services/authorization.service';
 import {Router} from '@angular/router';
 import {DataService} from '../../services/data.service';
-import {SubtaskComponent} from '../dialog/subtask/subtask.component';
 import {MatDialog} from '@angular/material/dialog';
 import {VersionComponent} from '../dialog/version/version.component';
 
@@ -19,9 +18,10 @@ export class NavComponent implements OnInit{
 
   time = new Date();
   timer;
-  user: string = 'holder';
-  loggedIn: boolean;
+  user: string = ''; // username
+  loggedIn: boolean; // log in button
   version = '1.1';
+  allowAccess : boolean;
 
   Stoday: boolean = true;
   Screate: boolean = false;
@@ -42,15 +42,23 @@ export class NavComponent implements OnInit{
               public dialog: MatDialog) {
   }
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    console.log('back button pressed')
+    this.logout2()
+  }
+
   ngOnInit() {
     this.timer = setInterval(() => {this.time = new Date();}, 1000);
     this.auth.sharedUser.subscribe(user => this.user = user);
     this.auth.sharedLoggedIn.subscribe(loggedIn => this.loggedIn = loggedIn);
+    console.log(this.router.url)
 
     if (this.auth.isLoggedIn()){
       this.loggedIn = true;
       this.user = localStorage.getItem('UserEmail');
     }
+
 
     this.data.sharedToday.subscribe(Stoday => this.Stoday = Stoday);
     this.data.sharedCreate.subscribe(Screate => this.Screate = Screate);
@@ -66,6 +74,7 @@ export class NavComponent implements OnInit{
     this.loggedIn = false;
     this.auth.sendState(this.loggedIn);
     this.router.navigateByUrl('');
+    this.allowAccess = false;
   }
 
   showToday(){
@@ -108,6 +117,7 @@ export class NavComponent implements OnInit{
     });
 
   }
+
 
 
   ngOnDestroy(){

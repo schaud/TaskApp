@@ -17,7 +17,7 @@ import {DataService} from '../../services/data.service';
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
-  user = localStorage.getItem('test');
+
   Stoday: boolean;
   Screate: boolean;
   Sdate: boolean;
@@ -41,12 +41,15 @@ export class TasksComponent implements OnInit {
     console.log(this.scrHeight, this.scrWidth);
   }
 
+
+
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   currentItemsToShow: [];
   pageSize = 3; // number of cards per page
 
 
   ngOnInit(): void {
+    this.restrictAccess();
     this.getTasksToday();
     this.getCurrentDate();
     this.currentItemsToShow = this.subTasks.slice(0, this.pageSize);
@@ -88,9 +91,7 @@ export class TasksComponent implements OnInit {
   showSpinnerDate: boolean = false;
   badPercent: boolean = false;
   complete: boolean = false;
-
-
-
+  allowAccess: boolean;
 
 // Variables: JSON Templates
   newTaskReport: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
@@ -343,6 +344,9 @@ export class TasksComponent implements OnInit {
     }
 
 
+    restrictAccess() {
+        this.allowAccess = this.auth.isLoggedIn();
+      }
 }
 
 

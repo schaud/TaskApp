@@ -1,6 +1,11 @@
-<span class="psa">Daily task report is automatically e-mailed at 8:00PM EST</span>
-<p>{{user}}</p>
-<div class="flex-container">
+<div *ngIf="!allowAccess" style="margin-left: auto; margin-right: auto; width: 300px; padding: 20px;">
+  <h2>Sorry, you must be logged in to view this page. Click the button below to log in.</h2>
+  <button mat-raised-button color="primary" routerLink="/"
+          style="margin-right: auto; margin-left: auto; width: 300px"> Log in</button>
+</div>
+
+<span *ngIf="allowAccess" class="psa">Daily task report is automatically e-mailed at 8:00PM EST</span>
+<div *ngIf="allowAccess" class="flex-container">
   <div class="flex-child">
   <mat-tab-group #tabGroup>
 
@@ -247,7 +252,7 @@
 <!--Mobile View -->
 
 <!-- Today View -->
-
+<div *ngIf="allowAccess">
 <mat-card class="mobile-view" *ngIf="scrWidth < 599">
 
 
@@ -465,3 +470,4 @@
   </div>
 
 </mat-card>
+</div>
