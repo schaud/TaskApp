@@ -17,7 +17,7 @@ import {DataService} from '../../services/data.service';
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
-
+  user = localStorage.getItem('test');
   Stoday: boolean;
   Screate: boolean;
   Sdate: boolean;
@@ -55,6 +55,9 @@ export class TasksComponent implements OnInit {
     this.data.sharedCreate.subscribe(Screate => this.Screate = Screate);
     this.data.sharedDate.subscribe(Sdate => this.Sdate = Sdate);
     this.data.sharedName.subscribe(Sname => this.Sname = Sname);
+    console.log('islogged?');
+    console.log(this.auth.isLoggedIn());
+    console.log(this.auth.getAuthenticatedUser())
   }
 
 //Variables: General and Application State

@@ -3,11 +3,9 @@ import {AuthenticationDetails, CognitoUser, CognitoUserPool} from 'amazon-cognit
 // import { Observable } from 'rxjs/Observable';
 import Observable from 'zen-observable';
 import { BehaviorSubject} from "rxjs";
-
-
-
 import {MatDialog} from '@angular/material/dialog';
 import {ForgotComponent} from '../components/dialog/forgot/forgot.component';
+
 
 const poolData = {
   UserPoolId: 'us-east-2_JQy9YBUJg', // Your user pool id here
@@ -24,11 +22,9 @@ export class AuthorizationService {
 
   private user = new BehaviorSubject('');
   private loggedIn = new BehaviorSubject(false)
-  private invalid = new BehaviorSubject(false)
 
   sharedUser = this.user.asObservable();
   sharedLoggedIn = this.loggedIn.asObservable();
-  sharedInvalid = this.invalid.asObservable();
   cognitoUser: any;
   newPassword;
 
@@ -86,18 +82,18 @@ export class AuthorizationService {
 
     const userData = {
       Username: email,
-      Pool: userPool
+      Pool: userPool,
     };
+
     const cognitoUser = new CognitoUser(userData);
 
     return new Observable(observer => {
 
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function(result) {
-
-          //console.log(result);
           observer.next(result);
           observer.complete();
+
         },
         onFailure: function(err) {
           console.log(err);
@@ -164,6 +160,13 @@ export class AuthorizationService {
   // }
 
 
+// get session
+//   cognitoUser.getSession(function (err, session) {
+//     localStorage.setItem('session',  session);
+//     if (err) {
+//       alert(err);
+//       return;
+//     }});
 
 
 

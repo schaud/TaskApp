@@ -29,6 +29,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { NavComponent } from './components/nav/nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatListModule } from '@angular/material/list';
+import { VersionComponent } from './components/dialog/version/version.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { MatListModule } from '@angular/material/list';
     ForgotComponent,
     SubtaskComponent,
     NavComponent,
+    VersionComponent,
   ],
   entryComponents: [ForgotComponent],
   imports: [

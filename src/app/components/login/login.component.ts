@@ -32,19 +32,23 @@ export class LoginComponent implements OnInit {
   }
 
 
-  onSubmit() {
+  async onSubmit() {
 
-    this.auth.signIn(this.emailAddress, this.pass).subscribe((data) => {
-      localStorage.setItem('userEmail',this.emailAddress);
+    await this.auth.signIn(this.emailAddress, this.pass).subscribe((data) => {
+      localStorage.setItem('UserEmail', this.emailAddress);
       this.user = this.emailAddress;
       this.auth.sendUser(this.user);
       this.loggedIn = true;
       this.auth.sendState(this.loggedIn);
+      console.log(data);
+      localStorage.setItem('loggedIn', String(this.loggedIn));
+
 
       this.router.navigateByUrl('/home');
     }, (err)=> {
       this.emailVerificationMessage = true;
       this.error = true;
+      console.log(err)
     });
 
   }

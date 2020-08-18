@@ -5,6 +5,9 @@ import { map, shareReplay } from 'rxjs/operators';
 import {AuthorizationService} from '../../services/authorization.service';
 import {Router} from '@angular/router';
 import {DataService} from '../../services/data.service';
+import {SubtaskComponent} from '../dialog/subtask/subtask.component';
+import {MatDialog} from '@angular/material/dialog';
+import {VersionComponent} from '../dialog/version/version.component';
 
 @Component({
   selector: 'app-nav',
@@ -16,8 +19,9 @@ export class NavComponent implements OnInit{
 
   time = new Date();
   timer;
-  user: string = '';
+  user: string = 'holder';
   loggedIn: boolean;
+  version = '1.1';
 
   Stoday: boolean = true;
   Screate: boolean = false;
@@ -34,13 +38,19 @@ export class NavComponent implements OnInit{
   constructor(private breakpointObserver: BreakpointObserver,
               private auth: AuthorizationService,
               private router: Router,
-              private data: DataService) {
+              private data: DataService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit() {
     this.timer = setInterval(() => {this.time = new Date();}, 1000);
     this.auth.sharedUser.subscribe(user => this.user = user);
     this.auth.sharedLoggedIn.subscribe(loggedIn => this.loggedIn = loggedIn);
+
+    if (this.auth.isLoggedIn()){
+      this.loggedIn = true;
+      this.user = localStorage.getItem('UserEmail');
+    }
 
     this.data.sharedToday.subscribe(Stoday => this.Stoday = Stoday);
     this.data.sharedCreate.subscribe(Screate => this.Screate = Screate);
@@ -90,8 +100,14 @@ export class NavComponent implements OnInit{
     console.log(this.Stoday)
   }
 
+  openNotes(){
+    let dialogRef = this.dialog.open(VersionComponent, {
+      data: {
+        version: this.version
+      }
+    });
 
-
+  }
 
 
   ngOnDestroy(){

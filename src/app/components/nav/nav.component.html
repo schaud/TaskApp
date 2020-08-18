@@ -28,7 +28,7 @@
       <span class="spacer"></span>
       <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" *ngIf="user" class="user">{{user}}</li>
       <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" class="est-time">{{ time | date: 'hh:mm:ss a' }} {{' EST'}}</li>
-      <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" class="app-info">Task App: beta v1.0</li>
+      <button mat-raised-button [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" (click)="openNotes()" class="app-info">Task App: beta v{{version}}</button>
       <li><button color="accent" class="logout" mat-raised-button (click) ="logout2()" *ngIf="loggedIn">Logout</button></li>
     </mat-toolbar>
     <ng-content></ng-content>

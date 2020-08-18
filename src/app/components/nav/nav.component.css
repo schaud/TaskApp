@@ -62,3 +62,8 @@ li{
   }
 }
 
+.app-info{
+  width: fit-content;
+  margin: 5px;
+}
+
