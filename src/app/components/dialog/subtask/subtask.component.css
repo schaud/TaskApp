@@ -1,0 +1,24 @@
+.subtask-description{
+  width: 500px;
+}
+
+.subtask-name{
+  width: 500px;
+}
+
+.subtask-progress{
+  width: 150px;
+}
+
+@media (max-width: 600px){
+  .subtask-description{
+    width: 200px;
+  }
+  .subtask-name{
+    width: 200px;
+  }
+  .subtask-progress{
+    width: 150px;
+
+  }
+}

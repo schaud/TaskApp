@@ -21,8 +21,8 @@ export class ApiServiceService {
     return this.http.get<any>(`${this.path}/task/`).toPromise();
   }
 
-  getTaskByTaskId(id): Promise<any>{
-    return this.http.get<any>(`${this.path}/task/${id}`).toPromise();
+  getTaskByTaskId(taskid): Promise<any>{
+    return this.http.get<any>(`${this.path}/task/?taskid=${taskid}`).toPromise();
   }
 
   getTasksToday(): Promise<any>{
@@ -33,12 +33,16 @@ export class ApiServiceService {
     return this.http.post<any>(`${this.path}/task/`, task).toPromise();
   }
 
+  updateTask(task: any): Promise<any>{
+    return this.http.put<any>(`${this.path}/task/`, task).toPromise();
+  }
+
   getTasksByDate(date): Promise<any> {
     return this.http.get<any>(`${this.path}/task?date=${date}`).toPromise();
   }
 
-  getTasksByUserId(id): Promise<any> {
-    return this.http.get<any>(`${this.path}/task?id=${id}`).toPromise();
+  getTasksByUserId(userid): Promise<any> {
+    return this.http.get<any>(`${this.path}/task?userid=${userid}`).toPromise();
   }
 
   getTaskByDateAndId(id, date): Promise<any> {
@@ -46,7 +50,7 @@ export class ApiServiceService {
   }
 
   getSubTasks(taskId): Promise <any>{
-    return this.http.get<any>(`${this.path}/task?taskid=${taskId}`).toPromise();
+    return this.http.get<any>(`${this.path}/task?subtask=${taskId}`).toPromise();
   }
 
   addSubTask(id, subTask: any): Promise<any>{

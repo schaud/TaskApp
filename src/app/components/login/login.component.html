@@ -22,7 +22,7 @@
                 placeholder="Password"
                 type="password"
                 required
-                minlength="6"
+                minlength="8"
                 name="password"
                 ngModel
                 #password="ngModel">
@@ -32,7 +32,7 @@
               </mat-error>
               <mat-error
                 *ngIf="password.errors && password.errors.minlength">
-                Password must be of length 6
+                Password must be of minimum length 8
               </mat-error>
               <mat-icon matSuffix>lock</mat-icon>
             </mat-form-field>
@@ -44,6 +44,13 @@
               Sign In
             </button>
           </form>
+          <button (click)="openForgot()"
+            mat-raised-button
+            color="accent"
+            class="login-button">
+            Forgot Password
+          </button>
+          <mat-error *ngIf="error" style="margin-left: auto; margin-right: auto; width: fit-content">Invalid username or password!</mat-error>
         </mat-card-content>
       </mat-tab>
       <mat-tab label="Admin">
@@ -81,7 +88,7 @@
                 placeholder="Password"
                 type="password"
                 required
-                minlength="6"
+                minlength="8"
                 name="password"
                 ngModel
                 #password="ngModel">
@@ -91,7 +98,7 @@
               </mat-error>
               <mat-error
                 *ngIf="password.errors && password.errors.minlength">
-                Password must be of length 6
+                Password must be of minimum length 8
               </mat-error>
               <mat-icon matSuffix>lock</mat-icon>
 
@@ -102,7 +109,7 @@
                 placeholder="Confirm Password"
                 type="password"
                 required
-                minlength="6"
+                minlength="8"
                 name="repassword"
                 ngModel
                 #repassword="ngModel">
@@ -112,15 +119,21 @@
               </mat-error>
               <mat-icon matSuffix>lock</mat-icon>
             </mat-form-field>
+            <p *ngIf="error" style="color: red"> Invalid Username or Password</p>
             <button
               mat-raised-button
               color="primary"
               class="login-button">
               Sign In
             </button>
+
           </form>
+
         </mat-card-content>
       </mat-tab>
     </mat-tab-group>
   </mat-card>
 </div>
+<!--<div> <button mat-raised-button (click)="openDialog()" color="primary" style="bottom:600px">Open Dialog</button></div>-->
+
+<!---->

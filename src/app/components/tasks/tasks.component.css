@@ -1,10 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway);
-
 *{
   font-family: 'Raleway', sans-serif;
   font-weight: 900;
 }
-
+body{
+  background-color: #ffffff;
+}
 span.psa{
   margin-top: 20px;
   display: block;
@@ -31,7 +32,7 @@ span.psa{
   /*margin-left: auto;*/
   /*margin-right: auto;*/
   font-family: 'Raleway', sans-serif;
-  width: 654px;
+  /*width: 654px;*/
   border: 1px solid black;
   border-radius: 5px;
   min-height: 660px;
@@ -104,11 +105,15 @@ form{
   height: 320px;
 }
 
+.scroll-container-name{
+  height: 430px;
+}
+
 .create-task-name{
-  width: 500px;
+  width: 450px;
 }
 .create-task-description{
-  width: 500px;
+  width: 450px;
 }
 
 .create-task-progress{
@@ -178,6 +183,65 @@ form{
 }
 
 
+.card-expansion-title{
+  display: inline-block;
+  margin-left: 30px;
+  margin-bottom: 10px;
+  width: 120px;
+  text-decoration: underline;
+}
+
+.card-expansion-date{
+  display: inline-block;
+  margin-left: 105px;
+  margin-bottom: 10px;
+  width: 120px;
+  text-decoration: underline;
+}
+
+.card-expansion-progress{
+  margin-left: 5px;
+  display: inline-block;
+  width: 30px;
+  margin-bottom: 10px;
+  text-decoration: underline;
+}
+
+.sub-task-spinner{
+  left:0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 1;
+  position: absolute;
+}
+
+
+@media (max-width: 600px){
+  mat-tab-group{
+    display:none;
+  }
+  span.psa{
+    display: none;
+  }
+  .subtask-view{
+    display: none;
+  }
+}
+
+.mobile-view{
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: fit-content;
+  width: fit-content;
+}
+
+.subtask-view{
+  width: fit-content;
+}
 
 
 

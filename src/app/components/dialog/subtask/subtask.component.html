@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{data.name + ' : '}}Add a Subtask</h2>
+<mat-dialog-content>
+<form class="subtask-form">
+
+  <mat-form-field class="subtask-name">
+    <mat-label>Subtask Name</mat-label>
+    <input [(ngModel)]="subTaskName" name="subTaskName" style="height: 50px" matInput placeholder="ex: Worked on Angular Material" value="">
+  </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="subtask-description">
+    <mat-label>Subtask Description</mat-label>
+    <textarea [(ngModel)]="subTaskDetails" name="newDetails" style="height: 75px" matInput placeholder="ex: Created navigation and expansion panels. Changed the material theme and incorporated mat tabs to better display the data. Incorporated mat forms cleaner UI."></textarea>
+  </mat-form-field>
+
+  <br><br>
+
+  <mat-form-field class="subtask-progress">
+    <mat-label>Subtask Progress</mat-label>
+    <input [(ngModel)]="subTaskProgress" name="subTaskProgress" style="height: 75px" matInput placeholder="ex: 15%">
+  </mat-form-field>
+  <p *ngIf="badPercent" style="color:red">You must enter a valid percent (ex: 20%, 12.51%)</p>
+  <br>
+
+  <button (click)="submit()" mat-raised-button color="primary">Submit Task</button>
+  <button (click) = "cancel()" style="margin-left:10px" mat-raised-button color="warn">Cancel</button>
+
+  <br>
+
+</form>
+
+</mat-dialog-content>

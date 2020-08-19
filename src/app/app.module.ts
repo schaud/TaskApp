@@ -20,9 +20,18 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { AmplifyService, AmplifyAngularModule } from 'aws-amplify-angular';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-
-
-
+import { NewpasswordComponent } from './components/dialog/newpassword/newpassword.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { SubtaskComponent } from './components/dialog/subtask/subtask.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { NavComponent } from './components/nav/nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatListModule } from '@angular/material/list';
+import { VersionComponent } from './components/dialog/version/version.component';
+import { ForgotComponent } from './components/dialog/forgot/forgot.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -30,27 +39,40 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     AppComponent,
     TasksComponent,
     LoginComponent,
+    NewpasswordComponent,
+    SubtaskComponent,
+    NavComponent,
+    VersionComponent,
+    ForgotComponent,
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        RouterModule,
-        AppRoutingModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatSliderModule,
-        MatCardModule,
-        MatTabsModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatExpansionModule,
-        AmplifyAngularModule,
-        ScrollingModule
-    ],
+  entryComponents: [NewpasswordComponent],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    RouterModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
+    MatCardModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    AmplifyAngularModule,
+    ScrollingModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatSidenavModule,
+    LayoutModule,
+    MatListModule,
+    MatMenuModule,
+  ],
   providers: [HttpClient, AmplifyService],
   bootstrap: [AppComponent]
 })

@@ -5,7 +5,7 @@ import {TasksComponent} from './components/tasks/tasks.component';
 
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: '', component: LoginComponent },
   { path: 'home', component: TasksComponent}
 ];
 

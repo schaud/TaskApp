@@ -1,0 +1,53 @@
+<mat-sidenav-container  class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [ngClass] = "{hidden: (isHandset$ | async) === false}"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar >LTI Task App</mat-toolbar>
+
+
+    <mat-nav-list *ngIf="loggedIn">
+      <a  mat-list-item (click)="showToday(); drawer.toggle()">Today's Tasks</a>
+      <a  mat-list-item (click)="showCreate(); drawer.toggle()">Create a Task</a>
+      <a  mat-list-item (click)="showName(); drawer.toggle()">Search Tasks By Name</a>
+      <a  mat-list-item (click)="showDate(); drawer.toggle()">Search Tasks By Date</a>
+    </mat-nav-list>
+
+    <mat-nav-list *ngIf="!loggedIn">
+      <a mat-list-item (click)="drawer.toggle()" routerLink="/">Log in</a>
+    </mat-nav-list>
+
+
+
+
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="(isHandset$ | async) ">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+<!--      <span>Task App</span>-->
+      <span><img id="logo" src="/assets/LTI_Lets_solve_logo_white_png.png" alt="LTI"></span>
+      <span><img id="logo2" src="/assets/LTI_Lets_solve_logo_white_png%202.png" alt="Lets Solve"></span>
+      <button mat-flat-button color="primary" [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" [matMenuTriggerFor]="menu" *ngIf="user" class="user" style="margin-left: 250px">
+        <mat-icon style="margin-right: 10px;">account_circle</mat-icon>{{user}} </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="changePassword()">Change Your Password</button>
+      </mat-menu>
+
+
+      <span class="spacer"></span>
+      <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" class="est-time">{{ time | date: 'hh:mm:ss a' }} {{' EST'}}</li>
+      <button mat-raised-button [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" (click)="openNotes()" class="app-info">Task App: beta v{{version}}</button>
+      <li><button color="accent" class="logout" mat-raised-button (click) ="logout2()" *ngIf="loggedIn">Logout</button></li>
+    </mat-toolbar>
+    <ng-content></ng-content>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

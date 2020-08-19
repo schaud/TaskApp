@@ -1,0 +1,69 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+  /*display: none;*/
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+  overflow: hidden;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.hidden{
+  display: none;
+}
+
+.hiddenLinks{
+  display: none;
+}
+
+.spacer{
+  flex: 1 1 auto;
+}
+
+#logo{
+  margin-left: 10px;
+  position: absolute;
+  height: 70%;
+  top: 10px;
+}
+
+#logo2{
+  position: absolute;
+  margin-left: 100px;
+  height: 40%;
+  top: 20px;
+}
+
+li{
+  list-style: none;
+  padding: 10px;
+}
+
+@media (max-width: 1170px){
+  .user{
+    display: none;
+  }
+
+}
+
+@media (max-width: 738px){
+  .est-time{
+    display:none
+  }
+}
+
+.app-info{
+  width: fit-content;
+  margin: 5px;
+}
+
