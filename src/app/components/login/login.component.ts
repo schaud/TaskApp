@@ -3,8 +3,10 @@ import { Auth } from 'aws-amplify';
 import {AmplifyService} from 'aws-amplify-angular';
 import {AuthorizationService} from '../../services/authorization.service';
 import { Router } from '@angular/router';
-import {ForgotComponent} from '../dialog/forgot/forgot.component';
+import {NewpasswordComponent} from '../dialog/newpassword/newpassword.component';
 import {MatDialog} from '@angular/material/dialog';
+import {VersionComponent} from '../dialog/version/version.component';
+import {ForgotComponent} from '../dialog/forgot/forgot.component';
 
 @Component({
   selector: 'app-login',
@@ -53,9 +55,14 @@ export class LoginComponent implements OnInit {
 
   }
 
+  openForgot(){
+    let dialogRef = this.dialog.open(ForgotComponent);
+  }
+
+
   openDialog(){
     let newPass;
-    let dialogRef = this.dialog.open(ForgotComponent, {data : {email: this.emailAddress}});
+    let dialogRef = this.dialog.open(NewpasswordComponent, {data : {email: this.emailAddress}});
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result.data}`);
       newPass = result.data;

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, HostListener, Input} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import { ApiServiceService} from '../../services/api-service.service';
 import * as moment from 'moment';
 import {MatDialog} from '@angular/material/dialog';
@@ -51,9 +51,9 @@ export class TasksComponent implements OnInit {
   ngOnInit(): void {
     this.restrictAccess();
     this.getTasksToday();
+    this.getTasksByName(this.getNameFromEmail(this.currentUser));
     this.getCurrentDate();
     this.currentItemsToShow = this.subTasks.slice(0, this.pageSize);
-
     this.data.sharedToday.subscribe(Stoday => this.Stoday = Stoday);
     this.data.sharedCreate.subscribe(Screate => this.Screate = Screate);
     this.data.sharedDate.subscribe(Sdate => this.Sdate = Sdate);
@@ -64,7 +64,7 @@ export class TasksComponent implements OnInit {
   }
 
 //Variables: General and Application State
-  currentUser = localStorage.getItem('userEmail');
+  currentUser = localStorage.getItem('UserEmail');
   selectedTask: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
   momentDate = moment.utc().utcOffset(-5).format('YYYY-MM-DD');
   name: String;
@@ -92,6 +92,7 @@ export class TasksComponent implements OnInit {
   badPercent: boolean = false;
   complete: boolean = false;
   allowAccess: boolean;
+  isAdmin: boolean = false;
 
 // Variables: JSON Templates
   newTaskReport: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
@@ -135,6 +136,20 @@ export class TasksComponent implements OnInit {
       }
     }
     console.log('The ID is ' + result)
+    return result;
+  }
+
+  getNameFromEmail(email){
+    let result;
+    for (let user of this.usernames) {
+      if (user.email == email) {
+        result = user.name;
+      }
+    }
+    console.log('daemail')
+
+    console.log(this.currentUser)
+    console.log('The name is ' + result)
     return result;
   }
 

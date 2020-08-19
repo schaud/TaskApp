@@ -35,8 +35,14 @@
 <!--      <span>Task App</span>-->
       <span><img id="logo" src="/assets/LTI_Lets_solve_logo_white_png.png" alt="LTI"></span>
       <span><img id="logo2" src="/assets/LTI_Lets_solve_logo_white_png%202.png" alt="Lets Solve"></span>
+      <button mat-flat-button color="primary" [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" [matMenuTriggerFor]="menu" *ngIf="user" class="user" style="margin-left: 250px">
+        <mat-icon style="margin-right: 10px;">account_circle</mat-icon>{{user}} </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="changePassword()">Change Your Password</button>
+      </mat-menu>
+
+
       <span class="spacer"></span>
-      <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" *ngIf="user" class="user">{{user}}</li>
       <li [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" class="est-time">{{ time | date: 'hh:mm:ss a' }} {{' EST'}}</li>
       <button mat-raised-button [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" (click)="openNotes()" class="app-info">Task App: beta v{{version}}</button>
       <li><button color="accent" class="logout" mat-raised-button (click) ="logout2()" *ngIf="loggedIn">Logout</button></li>

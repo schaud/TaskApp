@@ -1,22 +1,63 @@
-<h2 mat-dialog-title>Enter a New Password</h2>
+<div *ngIf="!reset">
+<h2 mat-dialog-title>Forgot Password</h2>
 <mat-dialog-content>
-  <h3>Hello, {{data.email}}</h3>
-  <p>As a first time user, you must reset your password. Please reset below.
-  </p>
+
+  <div *ngIf="!enteredUser">
+  <p>Enter your email address. We will send you a code to reset your password.</p>
+    <mat-form-field style="width: 400px">
+      <input [(ngModel)] = "emailAddress"
+             matInput
+             placeholder="Email Address"
+             required
+             name="email"
+             ngModel
+             #email="ngModel">
+      <mat-error *ngIf="email.invalid">Email is required</mat-error>
+      <mat-icon matSuffix>email</mat-icon>
+    </mat-form-field>
+    <br><br>
+    <button mat-raised-button color="accent" (click)="submitEmail(); enteredUser = true" style="margin-left: 130px">Send Code</button>
+    <br><br>
+    <button mat-raised-button color="primary"(click)="haveCode()" style="margin-left: 130px">I Already Have A Code</button>
+  </div>
+
+
+
+  <p *ngIf="enteredUser">A code to reset your password was sent to your email. Please enter the code below:</p>
   <br>
-  <mat-form-field>
-  <mat-label>Enter a new password:</mat-label>
-  <input matInput [(ngModel)]="newPassword" name="newPassword" type="password">
+  <mat-form-field *ngIf="enteredUser" class ="code">
+    <mat-label>Enter your reset code:</mat-label>
+    <input matInput [(ngModel)]="code" name="code">
     <mat-icon matSuffix>lock</mat-icon>
   </mat-form-field>
   <br>
-  <mat-form-field>
-  <mat-label>Confirm new password:</mat-label>
-  <input matInput [(ngModel)]="confirmNewPassword" name="confirmNewPassword" type="password">
+
+  <mat-form-field *ngIf="enteredUser" class="password">
+    <mat-label>Enter a new password:</mat-label>
+    <input matInput [(ngModel)]="newPassword" name="newPassword" type="password" >
     <mat-icon matSuffix>lock</mat-icon>
   </mat-form-field>
-  <p *ngIf="!match" style="color:red">Passwords do not match!</p>
+  <br>
+
+  <mat-form-field *ngIf="enteredUser"  class="password">
+    <mat-label>Confirm new password:</mat-label>
+    <input matInput [(ngModel)]="confirmNewPassword" name="confirmNewPassword" type="password">
+    <mat-icon matSuffix>lock</mat-icon>
+  </mat-form-field>
+  <mat-error *ngIf="!match" style="color:red">Passwords do not match!</mat-error>
+  <mat-error *ngIf="invalidCode" style="color:red">{{errorMessage}}</mat-error>
+  <mat-error *ngIf="newCode">A new code has been sent. Check your email.</mat-error>
+
+
 </mat-dialog-content>
-<mat-dialog-actions>
+
+<mat-dialog-actions *ngIf="enteredUser">
   <button (click)="submit()" mat-raised-button color="accent">Submit</button>
+  <button *ngIf="newCode" mat-raised-button color="primary" (click)="submitEmail(); invalidCode = false " style="margin-left: 130px">Send New Code</button>
 </mat-dialog-actions>
+  </div>
+
+<div *ngIf="reset">
+  <h3 style="color:green">Your password has been successfully reset.</h3>
+</div>
+

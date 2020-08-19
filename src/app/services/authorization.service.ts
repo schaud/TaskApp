@@ -4,7 +4,8 @@ import {AuthenticationDetails, CognitoUser, CognitoUserPool} from 'amazon-cognit
 import Observable from 'zen-observable';
 import { BehaviorSubject} from "rxjs";
 import {MatDialog} from '@angular/material/dialog';
-import {ForgotComponent} from '../components/dialog/forgot/forgot.component';
+import {NewpasswordComponent} from '../components/dialog/newpassword/newpassword.component';
+import {Auth} from 'aws-amplify';
 
 
 const poolData = {
@@ -20,6 +21,7 @@ const userPool = new CognitoUserPool(poolData);
 })
 export class AuthorizationService {
 
+
   private user = new BehaviorSubject('');
   private loggedIn = new BehaviorSubject(false)
 
@@ -27,7 +29,7 @@ export class AuthorizationService {
   sharedLoggedIn = this.loggedIn.asObservable();
   cognitoUser: any;
   newPassword;
-
+  Ferror: any = {code: '', message: ''}
 
   constructor(public dialog: MatDialog) { }
 
@@ -110,6 +112,31 @@ export class AuthorizationService {
     });
   }
 
+  changePassword(){
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        return Auth.changePassword(user, 'oldPassword', 'newPassword');
+      })
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  }
+
+  forgotPasswordOpen(username){
+    Auth.forgotPassword(username)
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  }
+
+  async forgotPasswordSubmit(username, code, new_password){
+    // localStorage.setItem('code', 'false');
+    // Collect confirmation code and new password, then
+
+      await Auth.forgotPasswordSubmit(username, code, new_password)
+
+  }
+
+
+
   isLoggedIn() {
     return userPool.getCurrentUser() != null;
   }
@@ -125,7 +152,7 @@ export class AuthorizationService {
   }
 
     async openDialog(email): Promise <any>{
-    let dialogRef = this.dialog.open(ForgotComponent, {data : {email: email}});
+    let dialogRef = this.dialog.open(NewpasswordComponent, {data : {email: email}});
     let password: string = '';
 
       return dialogRef.afterClosed().toPromise().then(result => {
@@ -142,6 +169,7 @@ export class AuthorizationService {
   sendState(state: boolean){
     this.loggedIn.next(state)
   }
+
 
   // pushCreate(){
   //   return this.create.asObservable();

@@ -1,8 +1,15 @@
-mat-form-field{
-  left: 120px;
-  right: auto;
+button{
+  margin: auto;
+  width: 200px;
 }
 
-button{
-  left: 180px;
+
+mat-form-field.password{
+  margin: auto;
+  width: 400px;
+}
+
+mat-form-field.code{
+  margin: auto;
+  width: 200px;
 }

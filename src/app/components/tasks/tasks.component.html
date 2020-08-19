@@ -7,7 +7,8 @@
 <span *ngIf="allowAccess" class="psa">Daily task report is automatically e-mailed at 8:00PM EST</span>
 <div *ngIf="allowAccess" class="flex-container">
   <div class="flex-child">
-  <mat-tab-group #tabGroup>
+
+  <mat-tab-group #tabGroup dynamicHeight>
 
 <!-- First Tab -->
   <mat-tab label="Today's Tasks">
@@ -76,12 +77,11 @@
 
   </mat-tab>
 
-<!-- Third Tab -->
+
+    <!-- Third Tab  -->
 
   <mat-tab label="Get Tasks By Name">
     <h2 class="tab-header">Get Tasks By Name</h2>
-
-
 
     <form class="create-form">
 
@@ -122,9 +122,6 @@
     </cdk-virtual-scroll-viewport>
 
     </mat-accordion>
-
-
-
 
   </mat-tab>
 
@@ -471,3 +468,34 @@
 
 </mat-card>
 </div>
+
+<!--view your tasks, incomplete need to initial functon on click to get tasksByName(emailToName(this.currentUser))-->
+<!--<mat-tab *ngIf="!isAdmin" label="Task History">-->
+<!--  <h2 class="tab-header">Your Previous Tasks</h2>-->
+<!--  <span *ngIf="exists_byName" class="expansion-title">Task Title</span>-->
+<!--  <span *ngIf="exists_byName" class="expansion-name">Date</span>-->
+<!--  <span *ngIf="exists_byName" class="expansion-progress">Progress</span>-->
+<!--  <mat-spinner *ngIf="showSpinnerName" color="accent" class="sub-task-spinner"></mat-spinner>-->
+
+<!--  <mat-accordion>-->
+<!--    <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container-name">-->
+<!--      <mat-expansion-panel *ngFor="let task of tasksByName" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">-->
+<!--        &lt;!&ndash;          (afterCollapse)="expanded=false"&ndash;&gt;-->
+<!--        <mat-expansion-panel-header>-->
+<!--          <mat-panel-title class="task-title">-->
+<!--            {{task.task}}-->
+<!--          </mat-panel-title>-->
+<!--          <mat-panel-description class="task-desc">-->
+<!--            {{task.taskdate}}-->
+<!--          </mat-panel-description>-->
+<!--          <mat-panel-description class="task-progress">-->
+<!--            {{task.progress}}-->
+<!--          </mat-panel-description>-->
+<!--        </mat-expansion-panel-header>-->
+<!--        <p style="margin-top:-25px">-->
+<!--          <button mat-raised-button color="primary" (click)="openDialog()">Add a Subtask</button></p>-->
+<!--      </mat-expansion-panel>-->
+<!--    </cdk-virtual-scroll-viewport>-->
+
+<!--  </mat-accordion>-->
+<!--</mat-tab>-->

@@ -20,7 +20,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { AmplifyService, AmplifyAngularModule } from 'aws-amplify-angular';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import { ForgotComponent } from './components/dialog/forgot/forgot.component';
+import { NewpasswordComponent } from './components/dialog/newpassword/newpassword.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { SubtaskComponent } from './components/dialog/subtask/subtask.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -30,6 +30,8 @@ import { NavComponent } from './components/nav/nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatListModule } from '@angular/material/list';
 import { VersionComponent } from './components/dialog/version/version.component';
+import { ForgotComponent } from './components/dialog/forgot/forgot.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -37,12 +39,13 @@ import { VersionComponent } from './components/dialog/version/version.component'
     AppComponent,
     TasksComponent,
     LoginComponent,
-    ForgotComponent,
+    NewpasswordComponent,
     SubtaskComponent,
     NavComponent,
     VersionComponent,
+    ForgotComponent,
   ],
-  entryComponents: [ForgotComponent],
+  entryComponents: [NewpasswordComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -68,6 +71,7 @@ import { VersionComponent } from './components/dialog/version/version.component'
     MatSidenavModule,
     LayoutModule,
     MatListModule,
+    MatMenuModule,
   ],
   providers: [HttpClient, AmplifyService],
   bootstrap: [AppComponent]
