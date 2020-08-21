@@ -5,40 +5,61 @@
 </div>
 
 <span *ngIf="allowAccess" class="psa">Daily task report is automatically e-mailed at 8:00PM EST</span>
-<div *ngIf="allowAccess" class="flex-container">
-  <div class="flex-child">
+<div *ngIf="allowAccess" class = "container">
+  <div>
 
-  <mat-tab-group #tabGroup dynamicHeight>
+  <mat-tab-group #tabGroup dynamicHeight mat-stretch-tabs (selectedTabChange)="tabChanged($event)">
 
 <!-- First Tab -->
   <mat-tab label="Today's Tasks">
     <h2 class="tab-header">Tasks for Today : {{' ' + getCurrentDate()}}</h2>
-    <span *ngIf="exists_today" class="expansion-title">Task Title</span>
-    <span *ngIf="exists_today" class="expansion-name">Name</span>
-    <span *ngIf="exists_today" class="expansion-progress">Progress</span>
-<!--    <mat-spinner *ngIf="showSpinner" color="accent" class="sub-task-spinner"></mat-spinner>-->
 
-    <mat-accordion>
-    <mat-expansion-panel  *ngFor="let task of tasks"
+        <mat-spinner *ngIf="showSpinner" color="accent"></mat-spinner>
+
+    <mat-accordion displayMode="flat" class="mat-table">
+      <section #todaySort matSort (matSortChange)="sortTasks($event, tasks)" class="mat-elevation-z2 mat-header-row">
+        <span class="mat-header-cell" mat-sort-header="task">Task</span>
+        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+        <span class="mat-header-cell" mat-sort-header="date">Date</span>
+        <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
+      </section>
+    <mat-expansion-panel  *ngFor="let task of currentItemsToShow"
             (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
-      <!--      (afterCollapse)="expanded=false"-->
-      <mat-expansion-panel-header>
-        <mat-panel-title class="task-title" >
+      <mat-expansion-panel-header class="expansion-container">
+        <mat-panel-title class="expansion-child task-name" >
           {{task.task}}
         </mat-panel-title>
-        <mat-panel-description class="task-desc" >
+        <mat-panel-description class="expansion-child" >
           {{task.userid}}
         </mat-panel-description>
-        <mat-panel-description class="task-progress" >
+        <mat-panel-description class="expansion-child">
+          {{task.taskdate}}
+        </mat-panel-description>
+        <mat-panel-description class="expansion-child" >
           {{task.progress}}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <p style="margin-top:-25px">
-        <button mat-raised-button color="primary"
-                (click)="openDialog()">Add a Subtask</button></p>
+      <p class="task-details">{{task.details}}</p>
+      <br>
+      <p style="margin-top:-15px; float:right">
+        <button style="margin-left: 25px" mat-raised-button color="primary"
+                (click)="openTasksDialog()">View Subtasks</button>
+        <button style="margin-left: 25px" mat-raised-button color="primary"
+                (click)="openDialog()">Add a Subtask</button>
+      </p>
+
     </mat-expansion-panel>
     </mat-accordion>
     <p *ngIf="tasks.length === 0" style="margin-left: auto; margin-right: auto; width: fit-content">No tasks have been posted today.</p>
+
+    <mat-paginator #paginator
+                   (page) = "onPageChange($event)"
+                   [length]="dataSource?.data.length"
+                   [pageIndex]="0"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[4, 8, 12, 16]">
+    </mat-paginator>
+
   </mat-tab>
 
 <!-- Second Tab -->
@@ -69,7 +90,7 @@
       <p *ngIf="badPercent" style="color:red">You must enter a valid percent (ex: 20%, 12.51%)</p>
       <br><br>
 
-      <button (click)="submitTasks();tabGroup.selectedIndex = 0;getTasksToday()" mat-raised-button color="primary">Submit Task</button>
+      <button style="margin-bottom: 20px" (click)="submitTasks();tabGroup.selectedIndex = 0;getTasksToday()" mat-raised-button color="primary">Submit Task</button>
       <br>
 
     </form>
@@ -77,10 +98,56 @@
 
   </mat-tab>
 
+    <mat-tab *ngIf="!isAdmin" label="Task History">
+      <h2 class="tab-header">Your Previous Tasks</h2>
+
+      <mat-spinner *ngIf="showSpinnerName" color="accent" class="sub-task-spinner"></mat-spinner>
+
+      <mat-accordion>
+        <section #nameSort matSort (matSortChange)="sortTasks($event, tasksByName)"  class="mat-elevation-z2 mat-header-row">
+          <span class="mat-header-cell" mat-sort-header="task">Task</span>
+          <span class="mat-header-cell" mat-sort-header="name">Name</span>
+          <span class="mat-header-cell" mat-sort-header="date">Date</span>
+          <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
+        </section>
+          <mat-expansion-panel *ngFor="let task of currentItemsToShowName" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
+            <mat-expansion-panel-header class="expansion-container">
+              <mat-panel-title class="expansion-child" >
+                {{task.task}}
+              </mat-panel-title>
+              <mat-panel-description class="expansion-child" >
+                {{task.userid}}
+              </mat-panel-description>
+              <mat-panel-description class="expansion-child" >
+                {{task.taskdate}}
+              </mat-panel-description>
+              <mat-panel-description class="expansion-child" >
+                {{task.progress}}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>{{task.details}}</p>
+            <br>
+            <p style="margin-top:-15px; float:right">
+              <button style="margin-left: 25px" mat-raised-button color="primary"
+                      (click)="openTasksDialog()">View Subtasks</button>
+              <button style="margin-left: 25px" mat-raised-button color="primary"
+                      (click)="openDialog()">Add a Subtask</button>
+            </p>
+          </mat-expansion-panel>
+        <mat-paginator #paginatorName
+                       (page) = "onPageChangeName($event)"
+                       [length]="dataSourceName?.data.length"
+                       [pageIndex]="0"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[4, 8, 12, 16]">
+        </mat-paginator>
+      </mat-accordion>
+    </mat-tab>
+
 
     <!-- Third Tab  -->
 
-  <mat-tab label="Get Tasks By Name">
+  <mat-tab *ngIf="isAdmin" label="Get Tasks By Name">
     <h2 class="tab-header">Get Tasks By Name</h2>
 
     <form class="create-form">
@@ -96,30 +163,40 @@
     <p *ngIf="!exists_byName && executed_name && name.length > 0 && complete" style="margin-left: 20px;"> No tasks available or name does not exist.</p>
 
 
-    <span *ngIf="exists_byName" class="expansion-title">Task Title</span>
-    <span *ngIf="exists_byName" class="expansion-name">Date</span>
-    <span *ngIf="exists_byName" class="expansion-progress">Progress</span>
+
     <mat-spinner *ngIf="showSpinnerName" color="accent" class="sub-task-spinner"></mat-spinner>
 
     <mat-accordion>
-        <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container-name">
+      <section matSort class="mat-elevation-z2 mat-header-row">
+        <span class="mat-header-cell" mat-sort-header="task">Task</span>
+        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+        <span class="mat-header-cell" mat-sort-header="date">Date</span>
+        <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
+      </section>
         <mat-expansion-panel *ngFor="let task of tasksByName" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
-          <!--          (afterCollapse)="expanded=false"-->
-      <mat-expansion-panel-header>
-        <mat-panel-title class="task-title">
-          {{task.task}}
-        </mat-panel-title>
-        <mat-panel-description class="task-desc">
-          {{task.taskdate}}
-        </mat-panel-description>
-        <mat-panel-description class="task-progress">
-          {{task.progress}}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <p style="margin-top:-25px">
-        <button mat-raised-button color="primary" (click)="openDialog()">Add a Subtask</button></p>
+          <mat-expansion-panel-header class="expansion-container">
+            <mat-panel-title class="expansion-child" >
+              {{task.task}}
+            </mat-panel-title>
+            <mat-panel-description class="expansion-child" >
+              {{task.userid}}
+            </mat-panel-description>
+            <mat-panel-description class="expansion-child" >
+              {{task.taskdate}}
+            </mat-panel-description>
+            <mat-panel-description class="expansion-child" >
+              {{task.progress}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>{{task.details}}</p>
+          <br>
+          <p style="margin-top:-15px; float:right">
+            <button style="margin-left: 25px" mat-raised-button color="primary"
+                    (click)="openTasksDialog()">View Subtasks</button>
+            <button style="margin-left: 25px" mat-raised-button color="primary"
+                    (click)="openDialog()">Add a Subtask</button>
+          </p>
     </mat-expansion-panel>
-    </cdk-virtual-scroll-viewport>
 
     </mat-accordion>
 
@@ -130,46 +207,59 @@
   <mat-tab label="Get Tasks By Date">
     <h2 class="tab-header">Get Tasks By Date</h2>
 
+    <mat-form-field style="margin-left: 20px" appearance="fill">
+      <mat-label>Choose a date</mat-label>
+      <input matInput  [matDatepicker]="picker" [(ngModel)]="calDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker ></mat-datepicker>
+    </mat-form-field>
 
-    <form class="create-form">
-
-      <mat-form-field class="date-input">
-        <mat-label>Date</mat-label>
-        <input [(ngModel)]="date" name="name" style="height: 50px" matInput placeholder="ex: 2020-07-21" value="">
-      </mat-form-field>
-      <button (click)="getTasksByDate()" style="margin-left: 20px; bottom:15px" mat-raised-button color="primary">Get Tasks</button>
-
-
-    </form>
+    <button mat-raised-button (click)="date=convertDate(calDate); getTasksByDate()"
+            style="margin-left: 20px; padding-left:15px; padding-right: 15px; padding-top: 0"  color="primary">Get Tasks</button>
+<br>
 
     <p *ngIf="!exists_byDate && executed_date && complete" style="margin-left: 20px"> No tasks found for this date.</p>
 
-
-
-    <span *ngIf="exists_byDate" class="expansion-title">Task Title</span>
-    <span *ngIf="exists_byDate" class="expansion-name">Name</span>
-    <span *ngIf="exists_byDate" class="expansion-progress">Progress</span>
     <mat-spinner *ngIf="showSpinnerDate" color="accent" class="sub-task-spinner"></mat-spinner>
 
     <mat-accordion>
-    <cdk-virtual-scroll-viewport itemSize="10" class="scroll-container">
-    <mat-expansion-panel *ngFor="let task of tasksByDate" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
-<!--      (afterCollapse)="expanded=false"-->
-      <mat-expansion-panel-header>
-        <mat-panel-title class="task-title">
+      <section #dateSort *ngIf="executed_date && exists_byDate" matSort (matSortChange)="sortTasks($event, tasksByDate)" class="mat-elevation-z2 mat-header-row">
+        <span class="mat-header-cell" mat-sort-header="task">Task</span>
+        <span class="mat-header-cell" mat-sort-header="name">Name</span>
+        <span class="mat-header-cell" mat-sort-header="date">Date</span>
+        <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
+      </section>
+    <mat-expansion-panel *ngFor="let task of currentItemsToShowDate" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
+      <mat-expansion-panel-header class="expansion-container">
+        <mat-panel-title class="expansion-child" >
           {{task.task}}
         </mat-panel-title>
-        <mat-panel-description class="task-desc">
+        <mat-panel-description class="expansion-child" >
           {{task.userid}}
         </mat-panel-description>
-        <mat-panel-description class="task-progress">
+        <mat-panel-description class="expansion-child" >
+          {{task.taskdate}}
+        </mat-panel-description>
+        <mat-panel-description class="expansion-child">
           {{task.progress}}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <p style="margin-top:-25px">
-        <button mat-raised-button color="primary" (click)="openDialog()">Add a Subtask</button></p>
+      <p>{{task.details}}</p>
+      <br>
+      <p style="margin-top:-15px; float:right">
+        <button style="margin-left: 25px" mat-raised-button color="primary"
+                (click)="openTasksDialog()">View Subtasks</button>
+        <button style="margin-left: 25px" mat-raised-button color="primary"
+                (click)="openDialog()">Add a Subtask</button>
+      </p>
     </mat-expansion-panel>
-      </cdk-virtual-scroll-viewport>
+      <mat-paginator *ngIf="executed_date && exists_byDate"  #paginatorDate
+                     (page) = "onPageChangeDate($event)"
+                     [length]="dataSourceDate?.data.length"
+                     [pageIndex]="0"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="[4, 8, 12, 16]">
+      </mat-paginator>
     </mat-accordion>
 
   </mat-tab>
@@ -178,7 +268,24 @@
 
 </div>
 
-<div class="flex-child subtask-view">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div hidden class="flex-child subtask-view">
   <div style="margin-left: 175px; margin-top:175px" *ngIf="expanded && !complete">
     <mat-spinner  color="accent"></mat-spinner>
   </div>
@@ -228,14 +335,6 @@
   </mat-accordion>
 
   </div>
-
-<!--  <mat-paginator #paginator-->
-<!--                 (page) = "onPageChange($event)"-->
-<!--                 [length]="dataSource?.data.length"-->
-<!--                 [pageIndex]="0"-->
-<!--                 [pageSize]="pageSize"-->
-<!--                 [pageSizeOptions]="[6, 12, 24, 36, 128]">-->
-<!--  </mat-paginator>-->
 </mat-card>
 </div>
 </div>
@@ -469,33 +568,4 @@
 </mat-card>
 </div>
 
-<!--view your tasks, incomplete need to initial functon on click to get tasksByName(emailToName(this.currentUser))-->
-<!--<mat-tab *ngIf="!isAdmin" label="Task History">-->
-<!--  <h2 class="tab-header">Your Previous Tasks</h2>-->
-<!--  <span *ngIf="exists_byName" class="expansion-title">Task Title</span>-->
-<!--  <span *ngIf="exists_byName" class="expansion-name">Date</span>-->
-<!--  <span *ngIf="exists_byName" class="expansion-progress">Progress</span>-->
-<!--  <mat-spinner *ngIf="showSpinnerName" color="accent" class="sub-task-spinner"></mat-spinner>-->
 
-<!--  <mat-accordion>-->
-<!--    <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container-name">-->
-<!--      <mat-expansion-panel *ngFor="let task of tasksByName" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">-->
-<!--        &lt;!&ndash;          (afterCollapse)="expanded=false"&ndash;&gt;-->
-<!--        <mat-expansion-panel-header>-->
-<!--          <mat-panel-title class="task-title">-->
-<!--            {{task.task}}-->
-<!--          </mat-panel-title>-->
-<!--          <mat-panel-description class="task-desc">-->
-<!--            {{task.taskdate}}-->
-<!--          </mat-panel-description>-->
-<!--          <mat-panel-description class="task-progress">-->
-<!--            {{task.progress}}-->
-<!--          </mat-panel-description>-->
-<!--        </mat-expansion-panel-header>-->
-<!--        <p style="margin-top:-25px">-->
-<!--          <button mat-raised-button color="primary" (click)="openDialog()">Add a Subtask</button></p>-->
-<!--      </mat-expansion-panel>-->
-<!--    </cdk-virtual-scroll-viewport>-->
-
-<!--  </mat-accordion>-->
-<!--</mat-tab>-->

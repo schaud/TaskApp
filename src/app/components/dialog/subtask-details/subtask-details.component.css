@@ -1,0 +1,31 @@
+.spacer{
+  flex: 1 1 auto;
+}
+
+.flex-container{
+  display: flex;
+}
+
+.flex-child:first-child {
+  margin-right: 20px;
+}
+
+.low-header{
+  margin-top: -10px;
+}
+
+.main-hr{
+  height: 4px;
+  border: none;
+  color: #3f51b5;
+  background-color: #3f51b5;
+}
+
+.sub-hr{
+  height: 2px;
+  border: none;
+  color: #3f51b5;
+  background-color: #3f51b5;
+}
+
+

@@ -1,0 +1,41 @@
+<div class="flex-container">
+
+  <div class="flex-child">
+    <h1 style="font-weight: bold">{{data.task.task}}</h1>
+    <h3 class="low-header" style="font-weight: bold">{{data.task.userid}}</h3>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="flex-child">
+   <h3 style="font-weight: bold">Last Updated : {{data.task.taskdate}}</h3>
+   <h3 class="low-header" style="font-weight: bold">{{'Progress: ' + data.task.progress}}</h3>
+  </div>
+
+</div>
+
+<h3>{{data.task.details}}</h3>
+
+<hr class="main-hr">
+<br><br>
+
+<div *ngIf="subTasks.length != 0">
+  <div *ngFor="let subtask of subTasks; let last = last">
+  <h2>{{subtask.subtask}}</h2>
+    <h3>{{subtask.taskdate}}</h3>
+    <p>{{subtask.details}}</p>
+    <hr *ngIf="!last" class="sub-hr">
+  </div>
+</div>
+
+<div *ngIf="subTasks.length == 0">
+  <p>No subtasks are currently available.</p>
+</div>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="close()">Close</button>
+  <button mat-raised-button color="primary" (click)="downloadSubTasks()">Download</button>
+
+</mat-dialog-actions>
+
+

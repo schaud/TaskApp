@@ -32,6 +32,11 @@ import { MatListModule } from '@angular/material/list';
 import { VersionComponent } from './components/dialog/version/version.component';
 import { ForgotComponent } from './components/dialog/forgot/forgot.component';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import { SubtaskDetailsComponent } from './components/dialog/subtask-details/subtask-details.component';
+import {MatSortModule} from '@angular/material/sort';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -44,6 +49,7 @@ import {MatMenuModule} from '@angular/material/menu';
     NavComponent,
     VersionComponent,
     ForgotComponent,
+    SubtaskDetailsComponent,
   ],
   entryComponents: [NewpasswordComponent],
   imports: [
@@ -72,8 +78,13 @@ import {MatMenuModule} from '@angular/material/menu';
     LayoutModule,
     MatListModule,
     MatMenuModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSortModule,
+    MatSnackBarModule
   ],
   providers: [HttpClient, AmplifyService],
   bootstrap: [AppComponent]
+
 })
 export class AppModule { }

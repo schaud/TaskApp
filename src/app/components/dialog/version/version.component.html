@@ -1,4 +1,15 @@
-<h2>Current Version: {{data.version}}</h2>
+<h2 style="text-decoration: underline">Current Version: {{data.version}}</h2>
+<h3>Version 1.2.1</h3>
+<ul>
+  <li>Subtask card view has been removed. Replaced with a dialog of subtasks on button click</li>
+  <li>Added Material Date Picker to select tasks by date</li>
+  <li>Mat Tab Group CSS has been optimized to be responsive with flex layout</li>
+  <li>Pagination and sorting has been implemented for each view</li>
+  <li>Task history can now be downloaded in JSON format</li>
+  <li>Replaced successful password change dialog from text to snackbar</li>
+  <li>Added 'Known Bugs' to version notes</li>
+</ul>
+<br>
 <h3>Version 1.1.2</h3>
 <ul>
   <li>Added Forgot Password Functionality, with Token Authentication</li>
@@ -11,4 +22,14 @@
   <li>Added version notes</li>
   <li>Added persistent log in, so user data remains on page refresh</li>
   <li>Implemented page security: A user can no longer access application data if they are not logged in</li>
+</ul>
+
+<br><br>
+
+<h3 style="text-decoration: underline">Known Bugs</h3>
+
+<ul>
+  <p style="width: 600px">At 8PM EST, the time is no longer synchronized and tasks will not show up.
+    This is caused by AWS being configured to UTC time, which is 5 hours before EST.</p>
+
 </ul>
