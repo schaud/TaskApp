@@ -113,7 +113,7 @@ export class NavComponent implements OnInit{
     let dialogRef = this.dialog.open(VersionComponent, {
       data: {
         version: this.version
-      }
+      }, height: '550px'
     });
 
   }

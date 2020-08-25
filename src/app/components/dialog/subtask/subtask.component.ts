@@ -24,7 +24,7 @@ export class SubtaskComponent implements OnInit {
   badPercent: boolean = false;
 
   validate(percentage) {
-    return percentage.match(/^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?%)$/) != null;
+    return percentage.match(/^(100|[1-9]?[0-9])$/) != null;
   }
 
   cancel(){

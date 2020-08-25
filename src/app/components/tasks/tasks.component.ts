@@ -1,16 +1,20 @@
-import {ChangeDetectorRef, Component, OnInit, HostListener, ViewChild, AfterViewInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, HostListener, ViewChild} from '@angular/core';
 import { ApiServiceService} from '../../services/api-service.service';
 import * as moment from 'moment';
 import {MatDialog} from '@angular/material/dialog';
 import {SubtaskComponent} from '../dialog/subtask/subtask.component';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {AuthorizationService} from '../../services/authorization.service';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {DataService} from '../../services/data.service';
 import {SubtaskDetailsComponent} from '../dialog/subtask-details/subtask-details.component';
 import {MatSort, Sort} from '@angular/material/sort';
-import {MatTabChangeEvent} from '@angular/material/tabs';
+import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
+import { Task } from '../../models/Task';
+import { Subtask } from '../../models/Subtask';
+import {User} from '@src/app/models/User';
+
 
 @Component({
   selector: 'app-tasks',
@@ -20,21 +24,27 @@ import {MatTabChangeEvent} from '@angular/material/tabs';
 
 
 
-export class TasksComponent implements OnInit, AfterViewInit {
+export class TasksComponent implements OnInit {
+
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+
 
   obs: Observable<any>;
-  dataSource: MatTableDataSource<Tasks>;
+  dataSource: MatTableDataSource<Task>;
   @ViewChild('todaySort') todaySort: MatSort;
   @ViewChild('paginator') paginator: MatPaginator;
 
   obsName: Observable<any>;
-  dataSourceName: MatTableDataSource<Tasks>;
+  dataSourceName: MatTableDataSource<Task>;
   @ViewChild('nameSort') nameSort: MatSort;
   @ViewChild('paginatorName') paginatorName: MatPaginator;
 
+  @ViewChild('nameSortAdmin') nameSortAdmin: MatSort;
+  @ViewChild('paginatorNameAdmin') paginatorNameAdmin: MatPaginator;
+
 
   obsDate: Observable<any>;
-  dataSourceDate: MatTableDataSource<Tasks>;
+  dataSourceDate: MatTableDataSource<Task>;
   @ViewChild('dateSort') dateSort: MatSort;
   @ViewChild('paginatorDate') paginatorDate: MatPaginator;
 
@@ -52,12 +62,12 @@ export class TasksComponent implements OnInit, AfterViewInit {
   scrHeight: any;
   scrWidth: any;
 
-  sortedData: Tasks[];
+  sortedData: Task[];
 
   constructor(private apiservice: ApiServiceService, public dialog: MatDialog,
               private auth: AuthorizationService, private data: DataService, private cdr: ChangeDetectorRef) {
     this.getScreenSize();
-    this.sortedData = this.tasks.slice();
+    // this.sortedData = this.tasks.slice();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -71,45 +81,58 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
     this.restrictAccess();
     console.log(this.auth.getAuthenticatedUser())
+    this.checkIsAdmin();
+
 
     this.getCurrentDate();
     this.getUsernames();
     this.getTasksToday();
-    this.getTasksByName(this.getNameFromEmail(this.currentUser));
+    if (!this.isAdmin){
+      this.getTasksByName(this.getNameFromEmail(this.currentUser));
+    }
+
+
 
     this.data.sharedToday.subscribe(Stoday => this.Stoday = Stoday);
     this.data.sharedCreate.subscribe(Screate => this.Screate = Screate);
     this.data.sharedDate.subscribe(Sdate => this.Sdate = Sdate);
     this.data.sharedName.subscribe(Sname => this.Sname = Sname);
 
-    this.dataSource = new MatTableDataSource<Tasks>(this.tasks);
+    this.dataSource = new MatTableDataSource<Task>(this.tasks);
     // this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.obs = this.dataSource.connect();
 
+    this.dataSourceName = new MatTableDataSource<Task>(this.tasksByName);
 
-    this.dataSourceName = new MatTableDataSource<Tasks>(this.tasksByName);
-    this.dataSourceName.paginator = this.paginatorName;
-    this.obsName = this.dataSource.connect();
-
+    if (this.isAdmin){
+      this.dataSourceName.paginator = this.paginatorNameAdmin;
+    }
+    if (!this.isAdmin){
+      this.dataSourceName.paginator = this.paginatorName;
+    }
+    this.obsName = this.dataSourceName.connect();
     this.cdr.detectChanges();
   }
 
+//Objects
+usernames: User[] = Object.create(User);
+task: Task = Object.create(Task);
+newTaskReport: Task = Object.create(Task);
+tasks: Task[] = Object.create(Task);
+tasksByDate: Task[] = Object.create(Task);
+tasksByName: Task[] = Object.create(Task);
+subTask: Subtask = Object.create(Subtask);
+subTasks: Subtask[] = Object.create(Subtask);
 
-  ngAfterViewInit(): void {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSourceName.paginator = this.paginatorName;
-    // this.dataSourceDate.paginator = this.paginatorDate;
-  }
 
 
 //Variables: General and Application State
   currentUser = localStorage.getItem('UserEmail');
-  selectedTask: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
+  selectedTask: Task = Object.create(Task);
   momentDate = moment.utc().utcOffset(-5).format('YYYY-MM-DD');
   name: String;
   date: any;
-  usernames: any = [{id: "holder", name: "holder", email: "holder"}];
   newTask: string;
   newProgress: string;
   newDetails: string;
@@ -117,6 +140,9 @@ export class TasksComponent implements OnInit, AfterViewInit {
   subTaskName: string;
   subTaskDetails: string;
   subTaskProgress: string;
+  subTaskUserId: string;
+  selectedIndex;
+  calDate = '';
 
 //Variables : Boolean flags
   exists_today: boolean;
@@ -133,34 +159,23 @@ export class TasksComponent implements OnInit, AfterViewInit {
   complete: boolean = false;
   allowAccess: boolean;
   isAdmin: boolean = false;
-
-// Variables: JSON Templates
-  calDate = '';
-  newTaskReport: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
-
-  tasks: Tasks[] = [{id: "holder", userid: "holder", task: "holder1", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder1", userid: "holder", task: "holder2", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder2", userid: "holder", task: "holder3", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder3", userid: "holder", task: "holder4", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder4", userid: "holder", task: "holder5", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder5", userid: "holder", task: "holder6", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder6", userid: "holder", task: "holder7", progress: "holder", taskdate: "YYYY-MM-DD"},
-    {id: "holder7", userid: "holder", task: "holder8", progress: "holder", taskdate: "YYYY-MM-DD"},
-  ];
+  validTask: boolean;
 
 
-  tasksByDate: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
-  tasksByName: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
-  subTask: any = {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'};
-  task: any = {id: "holder", userid: "holder", task: "holder", progress: "holder", taskdate: "YYYY-MM-DD"};
-  subTasks: any = [
-    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'},
-    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'},
-    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'}
-  ];
+
 
 
 //Utility functions
+
+  async checkIsAdmin(){
+
+    let users = await this.getUsernames();
+    for (let user of users) {
+      if (user.admin === "true" && user.email === this.currentUser) {
+        this.isAdmin = true;
+      }
+    }
+  }
   async swapIdToName(taskList: any) {
     await this.getUsernames();
     for (let task of await taskList) {
@@ -179,7 +194,6 @@ export class TasksComponent implements OnInit, AfterViewInit {
         result = user.id;
       }
     }
-    console.log('The ID is ' + result)
     return result;
   }
 
@@ -228,8 +242,29 @@ export class TasksComponent implements OnInit, AfterViewInit {
     });
   }
 
-  validate(percentage) {
-    return percentage.match(/^(101(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?%)$/) != null;
+  validatePercent(percentage) {
+
+    // return percentage.match(/^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?%)$/) != null;
+    // return percentage.match(/^[0-9][0-9]?$|^100$/) != null;
+    return percentage.match(/^(100|[1-9]?[0-9])$/) != null;
+
+
+
+
+  }
+
+  async validateTaskName(taskName){
+    let allTasks = await this.getAllTasks();
+    let exists = false;
+    for (let task of allTasks){
+      if (task.task == taskName && task.progress != '100%'){
+        console.log('Task already exists')
+        exists = true;
+        return false;
+      }
+    }
+    if (!exists) return true;
+
   }
 
   convertDate(str) {
@@ -246,7 +281,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
   //API functions
   async getUsernames() {
     this.usernames = await this.apiservice.getAllUsers().then();
-    console.log(this.usernames);
+    // console.log(this.usernames);
     return this.usernames;
   }
 
@@ -256,7 +291,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
       await this.getUsernames();
       this.tasks = await this.apiservice.getTasksToday().then();
       this.swapIdToName(this.tasks)
-      console.log(this.tasks)
+      // console.log(this.tasks)
       if (this.tasks.length === 0) {
         this.exists_today = false;
         console.log("No such Task ID exists")
@@ -264,7 +299,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
       console.log('Authenitcated User')
       console.log(this.currentUser)
 
-      this.dataSource = new MatTableDataSource<Tasks>(this.tasks);
+      this.dataSource = new MatTableDataSource<Task>(this.tasks);
       this.dataSource.paginator = this.paginator;
       this.currentItemsToShow = this.tasks.slice(0, this.pageSize);
 
@@ -274,19 +309,28 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
   async submitTasks() {
+    this.validTask = null;
     this.newTaskReport.taskdate = this.getCurrentDate();
     this.newTaskReport.id = '0';
-    this.newTaskReport.userid = this.getIdFromEmail(this.currentUser);
+    this.newTaskReport.userid = await this.getIdFromEmail(this.currentUser);
     this.newTaskReport.details = this.newDetails;
     this.newTaskReport.task = this.newTask;
     this.newTaskReport.progress = this.newProgress;
-    if (this.validate(this.newTaskReport.progress)) {
+    this.validTask = await this.validateTaskName(this.newTaskReport.task);
+
+    console.log(this.newTaskReport.task)
+    console.log('Task:' + this.validTask)
+
+    this.badPercent = false;
+    if (this.validatePercent(this.newTaskReport.progress) && this.validTask) {
+      this.newTaskReport.progress = this.newProgress + '%';
       await this.apiservice.createTask(this.newTaskReport);
-      console.log(this.newTaskReport)
-    } else {
+      // console.log(this.newTaskReport)
+    } else if (!this.validatePercent(this.newTaskReport.progress)) {
       this.badPercent = true;
       console.log('Invalid percentage')
     }
+
   }
 
 
@@ -302,9 +346,8 @@ export class TasksComponent implements OnInit, AfterViewInit {
       this.exists_byDate = false;
       console.log("No such Task ID exists")
     } else this.exists_byDate = true;
-    console.log(this.exists_byDate)
 
-    this.dataSourceDate = new MatTableDataSource<Tasks>(this.tasksByDate);
+    this.dataSourceDate = new MatTableDataSource<Task>(this.tasksByDate);
     this.dataSourceDate.paginator = this.paginatorDate;
     this.obsDate = this.dataSource.connect();
     this.currentItemsToShowDate = this.tasksByDate.slice(0, this.pageSize);
@@ -323,17 +366,23 @@ export class TasksComponent implements OnInit, AfterViewInit {
     let id = await this.getIdFromName(await name);
     this.tasksByName = await this.apiservice.getTasksByUserId(id);
     await this.swapIdToName(this.tasksByName)
-    console.log(this.tasksByName);
+    // console.log(this.tasksByName);
     if (this.tasksByName.length === 0) {
       this.exists_byName = false;
       console.log("No tasks for this name exists.")
     } else this.exists_byName = true;
     this.sortData(this.tasksByName);
 
-    this.dataSourceName = new MatTableDataSource<Tasks>(this.tasksByName);
-    this.dataSourceName.paginator = this.paginatorName;
-    this.currentItemsToShowName = this.tasksByName.slice(0, this.pageSize);
+    this.dataSourceName = new MatTableDataSource<Task>(this.tasksByName);
 
+    if (this.isAdmin){
+      this.dataSourceName.paginator = this.paginatorNameAdmin;
+    }
+    if (!this.isAdmin){
+      this.dataSourceName.paginator = this.paginatorName;
+    }
+
+    this.currentItemsToShowName = this.tasksByName.slice(0, this.pageSize);
     this.showSpinnerName = false;
     this.complete = true;
     return this.tasksByName;
@@ -343,8 +392,8 @@ export class TasksComponent implements OnInit, AfterViewInit {
     this.showSpinner = true;
     this.complete = false;
     this.subTasks = await this.apiservice.getSubTasks(taskId);
-    console.log('Subtasks');
-    console.log(this.subTasks)
+    // console.log('Subtasks');
+    // console.log(this.subTasks)
     this.sortData(this.subTasks);
     this.complete = true;
     this.showSpinner = false;
@@ -352,13 +401,14 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
   async createSubTask() {
+    this.subTask.userid = this.subTaskUserId;
     this.subTask.taskid = this.selectedTask.id;
     this.subTask.taskdate = this.getCurrentDate();
     this.subTask.details = this.subTaskDetails;
     this.subTask.subtask = this.subTaskName;
     this.subTask.progress = this.subTaskProgress;
 
-    console.log(this.subTask)
+    // console.log(this.subTask)
     if (this.subTaskName !== undefined) {
       this.dontUpdate = false;
       await this.apiservice.addSubTask(this.subTask.id, this.subTask);
@@ -379,11 +429,18 @@ export class TasksComponent implements OnInit, AfterViewInit {
     if (!this.dontUpdate) {
       await this.apiservice.updateTask(this.task)
     }
-    console.log('Update');
-    console.log(this.task);
+    // console.log('Update');
+    // console.log(this.task);
   }
 
+  async getAllTasks(){
+    return await this.apiservice.getAllTasks();
+  }
+
+
+
   // Angular Material Function: Used for creating Subtasks
+
   openDialog() {
     let dialogVals: any = {subtask: "holder", progress: "holder", details: "holder"};
     let close: boolean;
@@ -393,15 +450,17 @@ export class TasksComponent implements OnInit, AfterViewInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result.data}`);
+    dialogRef.afterClosed().subscribe(async result => {
+      // console.log(`Dialog result: ${result.data}`);
       dialogVals = result.data;
       close = result.data == true;
-      console.log('dialog vals')
-      console.log(dialogVals)
+      // console.log('dialog vals')
+      // console.log(dialogVals)
       this.subTaskProgress = dialogVals.progress;
       this.subTaskDetails = dialogVals.details;
       this.subTaskName = dialogVals.subtask;
+      this.subTaskUserId = await this.getIdFromEmail(this.currentUser);
+
     })
 
     if (close) {
@@ -442,9 +501,10 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
 
-  openTasksDialog() {
+  async openTasksDialog() {
     let taskDetails;
-    let dialogRef = this.dialog.open(SubtaskDetailsComponent, {data: {task: this.selectedTask}, height: '700px'});
+    let dialogRef = this.dialog.open(SubtaskDetailsComponent, {data: {task: this.selectedTask},
+      height: '700px'});
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog Tasks: ${result.data}`);
       taskDetails = result.data;
@@ -495,7 +555,15 @@ export class TasksComponent implements OnInit, AfterViewInit {
       this.dateTab = false;
       try{
         this.paginator.firstPage();
-        this.paginatorName.firstPage();
+
+        if (this.isAdmin){
+          this.paginatorNameAdmin.firstPage();
+        }
+
+        if (!this.isAdmin){
+          this.paginatorName.firstPage();
+        }
+
         this.paginatorDate.firstPage();
       } catch(error){}
     }
@@ -507,7 +575,12 @@ export class TasksComponent implements OnInit, AfterViewInit {
       this.dateTab = false;
       try{
         this.paginator.firstPage();
-        this.paginatorName.firstPage();
+        if (this.isAdmin){
+          this.paginatorNameAdmin.firstPage();
+        }
+        if (!this.isAdmin){
+          this.paginatorName.firstPage();
+        }
         this.paginatorDate.firstPage();
       } catch(error){}
     }
@@ -519,7 +592,12 @@ export class TasksComponent implements OnInit, AfterViewInit {
       this.dateTab = false;
       try{
         this.paginator.firstPage();
-        this.paginatorName.firstPage();
+        if (this.isAdmin){
+          this.paginatorNameAdmin.firstPage();
+        }
+        if (!this.isAdmin){
+          this.paginatorName.firstPage();
+        }
         this.paginatorDate.firstPage();
       } catch(error){}
     }
@@ -531,14 +609,19 @@ export class TasksComponent implements OnInit, AfterViewInit {
       this.dateTab = true;
       try{
         this.paginator.firstPage();
-        this.paginatorName.firstPage();
+        if (this.isAdmin){
+          this.paginatorNameAdmin.firstPage();
+        }
+        if (!this.isAdmin){
+          this.paginatorName.firstPage();
+        }
         this.paginatorDate.firstPage();
       } catch(error){}
     }
 
   }
 
-  sortTasks(sort: Sort, taskArray: Tasks[]) {
+  sortTasks(sort: Sort, taskArray: Task[]) {
     const data = taskArray.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
@@ -571,8 +654,14 @@ export class TasksComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async switchToToday(){
+    await this.getTasksToday();
+    if (this.validTask && this.badPercent === false){
+      this.tabGroup.selectedIndex = 0;
+      this.selectedIndex = 0;
+    }
+  }
 }
-
 
 
 
@@ -580,16 +669,3 @@ function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
-export interface Tasks {
-  id: string;
-  details?: string;
-  progress?: string;
-  task?: string;
-  taskdate?: string;
-  userid?: string;
-}
-
-
-
-//
-// }

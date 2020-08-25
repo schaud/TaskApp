@@ -2,6 +2,12 @@
   "name": "task-app",
   "version": "0.0.0",
   "scripts": {
+    "android": "tns run android --no-hmr",
+    "ios": "tns run ios --no-hmr",
+    "mobile": "tns run",
+    "preview": "tns preview",
+    "ngcc": "ngcc --properties es2015 module main --first-only",
+    "postinstall": "npm run ngcc",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -11,6 +17,11 @@
   },
   "private": true,
   "dependencies": {
+    "@nativescript/angular": "~10.0.0",
+    "@nativescript/core": "rc",
+    "@nativescript/theme": "~2.2.1",
+    "reflect-metadata": "~0.1.12",
+    "tslib": "^2.0.0",
     "@angular/animations": "~10.0.5",
     "@angular/cdk": "^10.1.1",
     "@angular/common": "~10.0.5",
@@ -30,17 +41,19 @@
     "moment": "^2.27.0",
     "rxjs": "~6.5.5",
     "save-as": "^0.1.8",
-    "tslib": "^2.0.0",
     "utils": "^0.3.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
+    "@nativescript/webpack": "~2.0.0",
+    "@nativescript/tslint-rules": "~0.0.5",
     "@angular-devkit/build-angular": "~0.1000.4",
     "@angular/cli": "~10.0.4",
     "@angular/compiler-cli": "~10.0.5",
-    "@types/node": "^12.11.1",
+    "@nativescript/schematics": "^10.0.2",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
@@ -53,5 +66,8 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.9.5"
+  },
+  "nativescript": {
+    "id": "org.nativescript.ngsample"
   }
 }

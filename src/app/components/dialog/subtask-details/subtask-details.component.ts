@@ -19,6 +19,8 @@ export class SubtaskDetailsComponent implements OnInit {
     {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'},
     {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'}
   ];
+  usernames: any = [{id: "holder", name: "holder", email: "holder"}];
+
 
   constructor(public dialogRef: MatDialogRef<SubtaskDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data:any,
@@ -32,6 +34,7 @@ export class SubtaskDetailsComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data)
     this.getSubTasks(this.data.task.id)
+    this.getUsernames();
   }
 
   sortData(array) {
@@ -40,12 +43,29 @@ export class SubtaskDetailsComponent implements OnInit {
     });
   }
 
+  async getUsernames() {
+    this.usernames = await this.apiservice.getAllUsers().then();
+    // console.log(this.usernames);
+    return this.usernames;
+  }
+
+  async swapIdToName(taskList: any) {
+    await this.getUsernames();
+    for (let task of await taskList) {
+      for (let employee of this.usernames) {
+        if (task.userid == employee.id)
+          task.userid = employee.name;
+      }
+    }
+  }
+
   async getSubTasks(taskId) {
     this.showSpinner = true;
     this.complete = false;
     this.subTasks = await this.apiservice.getSubTasks(taskId);
     console.log(this.subTasks)
     this.sortData(this.subTasks);
+    await this.swapIdToName(this.subTasks);
     this.complete = true;
     this.showSpinner = false;
     return this.subTasks;
@@ -61,8 +81,5 @@ export class SubtaskDetailsComponent implements OnInit {
       { type: 'text/plain;charset=utf-8' })
     saveAs(blob, `${localStorage.getItem('UserEmail')}_subtasks.txt`)
   }
-
-
-
 
 }

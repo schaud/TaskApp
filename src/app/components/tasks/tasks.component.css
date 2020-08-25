@@ -24,6 +24,11 @@ span.psa{
   display: flex;
 }
 
+.spinner-container{
+  display: flex;
+  justify-content: center;
+}
+
 .flex-child:first-child {
   margin-right: 20px;
 }
@@ -178,15 +183,15 @@ form{
   position: absolute;
 }
 
+mat-spinner{
+}
+
 
 @media (max-width: 600px){
-  mat-tab-group{
-    display:none;
-  }
+  /*mat-tab-group{*/
+  /*  display:none;*/
+  /*}*/
   span.psa{
-    display: none;
-  }
-  .subtask-view{
     display: none;
   }
 }
