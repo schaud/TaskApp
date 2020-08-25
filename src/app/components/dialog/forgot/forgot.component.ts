@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AuthorizationService} from '../../../services/authorization.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-forgot',
@@ -10,8 +11,9 @@ import {AuthorizationService} from '../../../services/authorization.service';
 export class ForgotComponent implements OnInit {
   action: string;
   local_data: any;
+  success = 'Your password has been successfully reset.'
 
-  constructor(public dialogRef: MatDialogRef<ForgotComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private auth: AuthorizationService) {
+  constructor(public dialogRef: MatDialogRef<ForgotComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private auth: AuthorizationService, private _snackBar: MatSnackBar) {
     this.local_data = {...data};
     this.action = this.local_data.action;
   }
@@ -62,12 +64,21 @@ export class ForgotComponent implements OnInit {
 
         if (!this.invalidCode) {
           this.reset = true;
-          setTimeout(() => this.dialogRef.close({data: this.confirmNewPassword}), 3000);
+          this.dialogRef.close({data: this.confirmNewPassword})
+          this.openSnackBar(this.success, 'Close')
+          // setTimeout(() => this.dialogRef.close({data: this.confirmNewPassword}), 3000);
         }
 
       } else  {
         this.match = false;
       }
     }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
+
 
 }

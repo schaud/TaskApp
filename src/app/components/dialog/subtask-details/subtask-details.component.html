@@ -1,0 +1,49 @@
+<div *ngIf="showSpinner" class="spinner-container">
+  <mat-spinner  color="accent"></mat-spinner>
+</div>
+
+<div class="flex-container">
+
+  <div class="flex-child">
+    <h1 style="font-weight: bold">{{data.task.task}}</h1>
+    <h3 class="low-header" style="font-weight: bold">{{'Created by: ' + data.task.userid}}</h3>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="flex-child">
+   <h3 style="font-weight: bold">Last Updated : {{data.task.taskdate}}</h3>
+   <h3 class="low-header" style="font-weight: bold">{{'Progress: ' + data.task.progress}}</h3>
+  </div>
+
+</div>
+
+<h3>{{data.task.details}}</h3>
+
+<hr class="main-hr">
+<br><br>
+
+<div *ngIf="subTasks.length != 0">
+  <div *ngFor="let subtask of subTasks; let last = last">
+    <div class="flex-container">
+      <h2 class="flex-child">{{subtask.subtask}}</h2>
+      <span class="spacer"></span>
+      <h3 class="flex-child">{{subtask.taskdate}}</h3>
+    </div>
+    <h3 class="low-header" style="font-weight: bold">{{'Contributor: ' +  subtask.userid}}</h3>
+    <p>{{subtask.details}}</p>
+    <hr *ngIf="!last" class="sub-hr">
+  </div>
+</div>
+
+<div *ngIf="subTasks.length == 0">
+  <p>No subtasks are currently available.</p>
+</div>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="close()">Close</button>
+  <button mat-raised-button color="primary" (click)="downloadSubTasks()">Download</button>
+
+</mat-dialog-actions>
+
+

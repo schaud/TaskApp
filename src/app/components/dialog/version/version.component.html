@@ -1,4 +1,15 @@
-<h2>Current Version: {{data.version}}</h2>
+<h2 style="text-decoration: underline">Current Version: {{data.version}}</h2>
+<h3>Version 1.2.1</h3>
+<ul>
+  <li>Subtask card view has been removed. Replaced with a dialog of subtasks on button click</li>
+  <li>Added Material Date Picker to select tasks by date</li>
+  <li>Mat Tab Group CSS has been optimized to be responsive with flex layout</li>
+  <li>Pagination and sorting has been implemented for each view</li>
+  <li>Task history can now be downloaded in JSON format</li>
+  <li>Replaced successful password change dialog from text to snackbar</li>
+  <li>Added 'Known Bugs' to version notes</li>
+</ul>
+<br>
 <h3>Version 1.1.2</h3>
 <ul>
   <li>Added Forgot Password Functionality, with Token Authentication</li>
@@ -12,3 +23,35 @@
   <li>Added persistent log in, so user data remains on page refresh</li>
   <li>Implemented page security: A user can no longer access application data if they are not logged in</li>
 </ul>
+
+<br><br>
+
+<h3 style="text-decoration: underline">Known Bugs</h3>
+
+<ul>
+  <li style="width: 600px">At 8PM EST, the time is no longer synchronized and tasks will not show up.
+    This is caused by AWS being configured to UTC time, which is 5 hours before EST.</li>
+  <li style="width: 600px">Progress regex does not allow 0% or 100%</li>
+</ul>
+
+<h3 style="text-decoration: underline">Remaining Tasks</h3>
+
+<li style="text-decoration: line-through">Fix time glitch</li>
+<li style="text-decoration: line-through">Add task name duplicate validation</li>
+<li style="text-decoration: line-through">Fix progress regex not allowing 0% or 100%</li>
+<li style="text-decoration: line-through">Change tasks to include creator name</li>
+<li style="text-decoration: line-through">Add Userid to sub tasks</li>
+<li style="text-decoration: line-through">Show more meta info on subtasks dialog per sub task</li>
+<li style="text-decoration: line-through">Add models to front end</li>
+
+<li>Add PrimeNg for inline Data edits</li>
+<li>Add change password feature</li>
+<li>Create send email api</li>
+<li>Enable automatic emails</li>
+<li>Create Ravi's account</li>
+<li>Create admin view</li>
+<li>Add admin status to users api</li>
+<li>Color code progress number</li>
+<li>Add transformations for progress number in the lambda if not following ‘XX%’</li>
+<li>Create mobile view with NativeScript</li>
+

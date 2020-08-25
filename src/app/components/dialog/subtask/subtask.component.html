@@ -20,7 +20,7 @@
     <mat-label>Subtask Progress</mat-label>
     <input [(ngModel)]="subTaskProgress" name="subTaskProgress" style="height: 75px" matInput placeholder="ex: 15%">
   </mat-form-field>
-  <p *ngIf="badPercent" style="color:red">You must enter a valid percent (ex: 20%, 12.51%)</p>
+  <p *ngIf="badPercent" style="color:red">You must enter a valid number (0-100)</p>
   <br>
 
   <button (click)="submit()" mat-raised-button color="primary">Submit Task</button>

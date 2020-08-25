@@ -123,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "TaskApp"
+  "defaultProject": "TaskApp",
+  "cli": {
+    "defaultCollection": "@nativescript/schematics"
+  }
 }
