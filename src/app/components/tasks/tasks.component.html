@@ -123,7 +123,20 @@
 <form>
   <mat-form-field style="width: 300px">
     <mat-label> Subtask Name </mat-label>
-    <input matInput  [(ngModel)]="subTaskFormName" name="subTaskFormName">
+    <input matInput  [(ngModel)]="subTaskFormName" name="subTaskFormName" >
+
+  </mat-form-field>
+  <br>
+  <br>
+
+  <mat-form-field style="width: 300px">
+    <mat-label> Subtask Contributor </mat-label>
+    <input matInput  [(ngModel)]="subTaskFormContributor" [matAutocomplete]="auto" name="subTaskFormName">
+    <mat-autocomplete #auto = "matAutocomplete">
+      <mat-option *ngFor = "let name of names" [value] = "name">
+        {{name}}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
   <br>
   <br>
@@ -147,9 +160,12 @@
       <mat-accordion>
         <mat-expansion-panel *ngFor="let item of subTaskFormDisplay; let i=index" style="padding-top: 0; padding-bottom: 0; margin: 0">
           <mat-expansion-panel-header style="padding-top: 0; padding-bottom: 0; margin: 0">
-            <mat-panel-title >
+            <mat-panel-title>
               {{item.subtask}}
             </mat-panel-title>
+            <mat-panel-description>
+              {{item.contributor}}
+            </mat-panel-description>
           </mat-expansion-panel-header>
           {{item.details}}
           <br>
@@ -262,7 +278,7 @@
               </mat-panel-title>
 
               <mat-panel-description class="expansion-child" >
-                {{task.userid}}
+                {{currentUser.name}}
               </mat-panel-description>
               <mat-panel-description class="expansion-child" >
                 {{task.taskdate}}

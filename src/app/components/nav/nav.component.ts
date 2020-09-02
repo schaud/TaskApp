@@ -20,7 +20,7 @@ export class NavComponent implements OnInit{
   timer;
   user: string = ''; // username
   loggedIn: boolean; // log in button
-  version = '1.2.1';
+  version = '1.3';
   allowAccess : boolean;
 
   Stoday: boolean = true;

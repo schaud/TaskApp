@@ -97,7 +97,7 @@ export class TasksComponent implements OnInit {
 
 
     this.getCurrentDate();
-    this.getUsernames();
+    // this.getUsernames();
     this.getTasksToday();
 
 
@@ -137,12 +137,13 @@ subTask: Subtask = Object.create(Subtask);
 subTasks: Subtask[] = Object.create(Subtask);
 subTaskFormName;
 subTaskFormDetails;
+subTaskFormContributor;
 TaskFormName;
 TaskFormDetails;
 
 
 //Variables: General and Application State
-  currentUser = JSON.parse(localStorage.getItem('user'));
+  currentUser : User = JSON.parse(localStorage.getItem('user'));
   selectedTask: Task = Object.create(Task);
   momentDate = moment.utc().utcOffset(-5).format('YYYY-MM-DD');
   name: String;
@@ -181,6 +182,7 @@ TaskFormDetails;
   validUser: boolean;
   freeTask = false;
   structuredTask = false;
+  names = []
 
 
 
@@ -189,20 +191,17 @@ TaskFormDetails;
 //Utility functions
 
   async checkIsAdmin(){
-
-    let users = await this.getUsernames();
-    this.isAdmin = false;
-    for (let user of users) {
-      if (user.admin === "true" && user.email === this.currentUser.email) {
-        this.isAdmin = true;
-      }
-    }
+    this.isAdmin = this.currentUser.admin === 'true';
+    console.log('admin?')
+    console.log(this.currentUser.admin)
+    console.log(this.isAdmin)
     if (!this.isAdmin){
-      this.getTasksByName(this.currentUser.name);
+      await this.getTasksByName(this.currentUser.name);
     }
     console.log(this.isAdmin)
   }
 
+  // needed to swap other user ids to name
   async swapIdToName(taskList: any) {
     await this.getUsernames();
     for (let task of await taskList) {
@@ -213,8 +212,9 @@ TaskFormDetails;
     }
   }
 
+  // needed to obtain names from other userids
   async getIdFromName(username) {
-    await this.getUsernames();
+    // await this.getUsernames();
     let result;
     for (let user of this.usernames) {
       if (user.name == await username) {
@@ -224,30 +224,10 @@ TaskFormDetails;
     return result;
   }
 
-  async getIdFromEmail(email) {
-    await this.getUsernames();
-    let result;
-    for (let user of this.usernames) {
-      if (user.email == await email) {
-        result = user.id;
-      }
-    }
-    return result;
-  }
 
-  async getNameFromEmail(email) {
-    await this.getUsernames();
-    let result;
-    for (let user of this.usernames) {
-      if (user.email == await email) {
-        result = user.name;
-      }
-    }
-    return result;
-  }
-
+  // needed for tasks by date validation
   async isUser(name){
-    await this.getUsernames();
+    // await this.getUsernames();
     let valid = false;
     for (let user of this.usernames){
       if (user.name === name){
@@ -271,8 +251,7 @@ TaskFormDetails;
     if (month < 10) {
       month2 = '0' + month;
     }
-    let fullDate = `${year}-${month2}-${day2}`;
-    return fullDate;
+    return `${year}-${month2}-${day2}`;
   }
 
   sortData(array) {
@@ -320,23 +299,25 @@ TaskFormDetails;
   //API functions
   async getUsernames() {
     this.usernames = await this.apiservice.getAllUsers().then();
-    console.log(this.usernames);
+    if (this.names.length === 0){
+      for (let user of this.usernames){
+        this.names.push(user.name)
+      }
+      console.log(this.names)
+    }
+
     return this.usernames;
   }
 
   async getTasksToday() {
     this.showSpinner = true;
     if (!this.dontUpdate) {
-      await this.getUsernames();
       this.tasks = await this.apiservice.getTasksToday().then();
-      this.swapIdToName(this.tasks)
-      // console.log(this.tasks)
+      await this.swapIdToName(this.tasks)
       if (this.tasks.length === 0) {
         this.exists_today = false;
         console.log("No such Task ID exists")
       } else this.exists_today = true;
-      console.log('Authenitcated User')
-      console.log(this.currentUser)
 
       this.dataSource = new MatTableDataSource<Task>(this.tasks);
       this.dataSource.paginator = this.paginator;
@@ -351,14 +332,12 @@ TaskFormDetails;
     this.validTask = null;
     this.newTaskReport.taskdate = this.getCurrentDate();
     this.newTaskReport.id = '0';
-    this.newTaskReport.userid = await this.getIdFromEmail(this.currentUser);
+    this.newTaskReport.userid = this.currentUser.id;
     this.newTaskReport.details = this.newDetails;
     this.newTaskReport.task = this.newTask;
     this.newTaskReport.progress = this.newProgress;
     this.validTask = await this.validateTaskName(this.newTaskReport.task);
 
-    console.log(this.newTaskReport.task)
-    console.log('Task:' + this.validTask)
 
     this.badPercent = false;
     if (this.validatePercent(this.newTaskReport.progress) && this.validTask) {
@@ -379,7 +358,7 @@ TaskFormDetails;
     this.executed_date = true;
     await this.getUsernames();
     this.tasksByDate = await this.apiservice.getTasksByDate(this.date).then();
-    this.swapIdToName(this.tasksByDate)
+    await this.swapIdToName(this.tasksByDate)
     console.log(this.tasksByDate)
     if (this.tasksByDate.length === 0) {
       this.exists_byDate = false;
@@ -453,15 +432,11 @@ TaskFormDetails;
 
 
     let id = await this.getIdFromName(this.name)
-    console.log(this.date)
-    console.log(this.name)
-    console.log('id')
-    console.log(id)
+
 
 
   if (this.date != 'NaN-aN-aN' && this.date != '1969-12-31' && id && id.length > 0 && validUser) {
     this.customSearch = await this.apiservice.getTaskByDateAndId(id, this.date)
-    console.log('date and id')
 
   } else if (this.date && this.date != 'NaN-aN-aN' && this.date != '1969-12-31') {
 
@@ -469,8 +444,6 @@ TaskFormDetails;
       this.validUser = true;
       this.customSearch = await this.apiservice.getTasksByDate(this.date)
       // await this.swapIdToName(this.customSearch);
-      console.log('date init custom search')
-      console.log(this.customSearch)
       // this.exists_custom = this.customSearch.length !== 0;
       // this.complete = true;
       // this.showSpinnerCustom = false;
@@ -519,18 +492,9 @@ TaskFormDetails;
       return this.customSearch;
   }
 
-  async getSubTasks(taskId) {
-    this.showSpinner = true;
-    this.complete = false;
-    this.subTasks = await this.apiservice.getSubTasks(taskId);
-    this.sortData(this.subTasks);
-    this.complete = true;
-    this.showSpinner = false;
-    return this.subTasks;
-  }
 
   async createSubTask() {
-    this.subTask.userid = await this.getIdFromEmail(this.currentUser);
+    this.subTask.userid = this.currentUser.id;
     this.subTask.taskid = this.selectedTask.id;
     this.subTask.taskdate = this.getCurrentDate();
     this.subTask.details = this.subTaskDetails;
@@ -551,8 +515,6 @@ TaskFormDetails;
     console.log('the task id')
 
     task.userid = await this.getIdFromName(this.selectedTask.userid);
-    console.log('the task update')
-    console.log(task.userid)
     if (!this.dontUpdate) {
       await this.apiservice.updateTask(task)
     }
@@ -581,7 +543,7 @@ TaskFormDetails;
       this.subTaskProgress = dialogVals.progress;
       this.subTaskDetails = dialogVals.details;
       this.subTaskName = dialogVals.subtask;
-      this.subTaskUserId = await this.getIdFromEmail(this.currentUser);
+      this.subTaskUserId = this.currentUser.id;
     })
 
     if (close) {
@@ -827,7 +789,7 @@ TaskFormDetails;
 
 
   addSubTaskForm() {
-    let subTask = {subtask: this.subTaskFormName, details: this.subTaskFormDetails}
+    let subTask = {subtask: this.subTaskFormName, details: this.subTaskFormDetails, contributor: this.subTaskFormContributor}
     this.subTaskFormDisplay.push(subTask);
     this.subTaskFormName = '';
     this.subTaskFormDetails = '';
@@ -840,7 +802,6 @@ TaskFormDetails;
   async submitStructuredForm(){
     this.subTasks = [];
     let task : any = '';
-    let user = await this.getIdFromEmail(this.currentUser);
 
     this.newDetails = this.TaskFormDetails.replace(/(\r\n|\n|\r)/gm, "");;
     this.newTask = this.TaskFormName;
@@ -855,7 +816,7 @@ TaskFormDetails;
     for (let item of this.subTaskFormDisplay){
       let subTask : Subtask = Object.create(Subtask);
 
-      subTask.userid = user;
+      subTask.userid = await this.getIdFromName(item.contributor);
       subTask.taskid = task.id;
       subTask.taskdate = this.getCurrentDate();
       subTask.details = item.details.replace(/(\r\n|\n|\r)/gm, "");
@@ -871,6 +832,8 @@ TaskFormDetails;
 
     this.subTaskFormName = '';
     this.subTaskFormDetails = '';
+    this.subTaskFormContributor = '';
+
     this.TaskFormName = '' ;
     this.TaskFormDetails = '';
 
@@ -888,23 +851,26 @@ TaskFormDetails;
   }
 
   async updateStructuredTask(taskId){
-    let structuredProgress = await this.structuredProgress(taskId);
-    this.selectedTask.progress = String(structuredProgress) + '%';
-    await this.updateTask(this.selectedTask)
+    if (this.selectedTask.type == 'structured'){
 
-    if (!this.isAdmin && this.nameTab){
-      this.getTasksByName(this.getNameFromEmail(this.currentUser));
-    }
-    if (this.todayTab){
-      this.getTasksToday();
-    }
-    if (this.dateTab){
-      this.getTasksByDate();
+      let structuredProgress = await this.structuredProgress(taskId);
+      this.selectedTask.progress = String(structuredProgress) + '%';
+      await this.updateTask(this.selectedTask)
+
+      if (!this.isAdmin && this.nameTab){
+        await this.getTasksByName(this.currentUser.name);
+      }
+      if (this.todayTab){
+        await this.getTasksToday();
+      }
+      if (this.dateTab){
+        await this.getTasksByDate();
+
+      }
 
     }
 
   }
-
 
 }
 
@@ -914,3 +880,38 @@ function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
+
+//Removed Functions
+
+// async getNameFromEmail(email) {
+//   // await this.getUsernames();
+//   let result;
+//   for (let user of this.usernames) {
+//     if (user.email == await email) {
+//       result = user.name;
+//     }
+//   }
+//   return result;
+// }
+
+// (maybe not needed?) to obtain ids from other emails
+// async getIdFromEmail(email) {
+//   // await this.getUsernames();
+//   let result;
+//   for (let user of this.usernames) {
+//     if (user.email == await email) {
+//       result = user.id;
+//     }
+//   }
+//   return result;
+// }
+
+// async getSubTasks(taskId) {
+//   this.showSpinner = true;
+//   this.complete = false;
+//   this.subTasks = await this.apiservice.getSubTasks(taskId);
+//   this.sortData(this.subTasks);
+//   this.complete = true;
+//   this.showSpinner = false;
+//   return this.subTasks;
+// }
