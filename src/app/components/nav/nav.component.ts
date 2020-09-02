@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {DataService} from '../../services/data.service';
 import {MatDialog} from '@angular/material/dialog';
 import {VersionComponent} from '../dialog/version/version.component';
+import {ChangepassComponent} from '@src/app/components/dialog/changepass/changepass.component';
 
 @Component({
   selector: 'app-nav',
@@ -118,10 +119,9 @@ export class NavComponent implements OnInit{
 
   }
 
-  changePassword(){
-    //fill with change pass logic
+  openChangePassDialog(){
+    let dialogRef = this.dialog.open(ChangepassComponent, {width: '400px'})
   }
-
 
 
   ngOnDestroy(){

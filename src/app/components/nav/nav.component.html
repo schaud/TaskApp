@@ -38,7 +38,7 @@
       <button mat-flat-button color="primary" [ngClass] = "{hiddenLinks: (isHandset$ | async) === true}" [matMenuTriggerFor]="menu" *ngIf="user" class="user" style="margin-left: 250px">
         <mat-icon style="margin-right: 10px;">account_circle</mat-icon>{{user}} </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="changePassword()">Change Your Password</button>
+        <button mat-menu-item (click)="openChangePassDialog()">Change Your Password</button>
       </mat-menu>
 
 

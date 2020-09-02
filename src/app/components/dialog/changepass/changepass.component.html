@@ -1,0 +1,30 @@
+<h2 class="centered-container">Change Your Password</h2>
+<br>
+  <mat-form-field class="centered-container" style="width: 100%">
+    <mat-label>Current Password</mat-label>
+    <input matInput style="width: 100%" [(ngModel)]="currentPassword" type="password" placeholder="Enter your current password">
+  </mat-form-field>
+  <br><br>
+
+    <mat-form-field class="centered-container" style="width: 100%">
+      <mat-label>New Password</mat-label>
+      <input style="width: 100%" matInput [(ngModel)]="newPassword" type="password" placeholder="Enter your new password">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="centered-container" style="width: 100%">
+      <mat-label>Confirm Password</mat-label>
+      <input style="width: 100%" matInput [(ngModel)]="confirmNewPassword" type="password" placeholder="Confirm your new password">
+    </mat-form-field>
+  <br>
+
+<p *ngIf="nullFields" class="centered-container" style="color:red">One or more fields were not filled out.</p>
+<p *ngIf="noMatch" class="centered-container" style="color: red">Your new password did not match the confirmation. Please enter them again</p>
+<p *ngIf="error" class="centered-container" style="color: red">{{errorMessage}}</p>
+
+
+  <mat-dialog-actions class="centered-container">
+    <button mat-raised-button color="primary" (click)="submit()">Submit</button>
+    <button mat-raised-button color="warn" (click) = "close()">Cancel</button>
+  </mat-dialog-actions>
+
+

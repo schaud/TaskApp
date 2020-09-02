@@ -112,13 +112,15 @@ export class AuthorizationService {
     });
   }
 
-  changePassword(){
-    Auth.currentAuthenticatedUser()
-      .then(user => {
-        return Auth.changePassword(user, 'oldPassword', 'newPassword');
-      })
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
+  async changePassword(oldPass, newPass){
+    // Auth.currentAuthenticatedUser()
+    //   .then(user => {
+    //     return Auth.changePassword(user, oldPass, newPass);
+    //   })
+    //   .then(data => console.log(data))
+    //   .catch(err => console.log(err));
+    let user = await Auth.currentAuthenticatedUser();
+    return await Auth.changePassword(user, oldPass, newPass);
   }
 
   forgotPasswordOpen(username){
