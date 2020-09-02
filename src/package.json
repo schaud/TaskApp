@@ -3,5 +3,9 @@
   "android": {
     "v8Flags": "--expose_gc",
     "markingMode": "none"
+  },
+  "dependencies": {
+    "primeicons": "^4.0.0",
+    "primeng": "^10.0.0-rc.3"
   }
 }

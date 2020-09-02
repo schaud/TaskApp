@@ -1,0 +1,46 @@
+<h2>Edit Task: {{data.task.task}} </h2>
+
+<form>
+
+  <mat-form-field>
+    <mat-label>Task Name</mat-label>
+    <input [(ngModel)]="task" name="task" style="height: 50px" matInput>
+  </mat-form-field>
+
+
+  <br>
+
+  <mat-form-field>
+    <mat-label>Task Progress</mat-label>
+    <input [(ngModel)]="progress" name="progress" style="height: 50px" matInput>
+  </mat-form-field>
+
+
+  <br>
+
+  <mat-form-field>
+    <mat-label>Task Date</mat-label>
+    <input disabled [(ngModel)]="taskdate" name="taskdate" style="height: 50px" matInput>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field>
+    <mat-label>Creator</mat-label>
+    <input disabled [(ngModel)]="userid" name="userid" style="height: 50px" matInput>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field>
+    <mat-label>Task Details</mat-label>
+    <textarea [(ngModel)]="details" name="details" style="height: 50px" matInput></textarea>
+  </mat-form-field>
+
+</form>
+
+<mat-dialog-actions>
+  <button (click)="submit()" mat-raised-button color="primary">Update Task</button>
+  <button (click)="cancel()" mat-raised-button color="warn">Cancel</button>
+
+</mat-dialog-actions>

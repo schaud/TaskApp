@@ -5,5 +5,6 @@ export class Task {
   task?: string;
   taskdate?: string;
   userid?: string;
+  type? : string;
 }
 

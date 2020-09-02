@@ -24,14 +24,39 @@
 <br><br>
 
 <div *ngIf="subTasks.length != 0">
-  <div *ngFor="let subtask of subTasks; let last = last">
+  <div *ngFor="let subtask of subTasks; let last = last; let i = index">
+
     <div class="flex-container">
-      <h2 class="flex-child">{{subtask.subtask}}</h2>
+      <h2 style="width:500px" class="flex-child">{{subtask.subtask}}</h2>
       <span class="spacer"></span>
       <h3 class="flex-child">{{subtask.taskdate}}</h3>
     </div>
-    <h3 class="low-header" style="font-weight: bold">{{'Contributor: ' +  subtask.userid}}</h3>
-    <p>{{subtask.details}}</p>
+
+    <div class="flex-container">
+      <h3 class="low-header flex-child" style="font-weight: bold">{{'Contributor: ' +  subtask.userid}}</h3>
+      <span class="spacer"></span>
+      <h3 *ngIf="!subTasks[i].editable" class="low-header flex-child">{{subtask.progress}}</h3>
+      <mat-form-field *ngIf="subTasks[i].editable" class="low-header flex-child" style="width: 40px">
+        <input  matInput [(ngModel)]="subtask.progress">
+      </mat-form-field>
+    </div>
+    <p *ngIf="!subTasks[i].editable">{{subtask.details}}</p>
+<mat-form-field *ngIf="subTasks[i].editable" class="subtask-details">
+  <textarea style="height: 75px" matInput [(ngModel)]="subtask.details"></textarea>
+</mat-form-field>
+
+    <div *ngIf="subTasks[i].editable == false" >
+      <br>
+      <button mat-raised-button color="primary" (click)="toggleEditable(i)">Edit Subtask</button>
+      <br><br>
+    </div>
+
+    <div *ngIf="subTasks[i].editable == true">
+      <button  mat-raised-button color="warn" (click)="toggleEditable(i)">Cancel</button>
+      <button  style="margin-left: 20px" mat-raised-button color="primary" (click)="updateSubTask(i)">Update Task</button>
+    </div>
+
+
     <hr *ngIf="!last" class="sub-hr">
   </div>
 </div>
@@ -40,7 +65,7 @@
   <p>No subtasks are currently available.</p>
 </div>
 
-<mat-dialog-actions>
+<mat-dialog-actions style="float: right; margin-right: 20px">
   <button mat-raised-button color="warn" (click)="close()">Close</button>
   <button mat-raised-button color="primary" (click)="downloadSubTasks()">Download</button>
 

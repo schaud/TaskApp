@@ -42,11 +42,12 @@ export class ApiServiceService {
   }
 
   getTasksByUserId(userid): Promise<any> {
+    console.log(this.path + `/task?userid=${userid}`)
     return this.http.get<any>(`${this.path}/task?userid=${userid}`).toPromise();
   }
 
   getTaskByDateAndId(id, date): Promise<any> {
-    return this.http.get<any>(`${this.path}/task?id=${id}&date=${date}`).toPromise();
+    return this.http.get<any>(`${this.path}/task?userid=${id}&date=${date}`).toPromise();
   }
 
   getSubTasks(taskId): Promise <any>{
@@ -55,6 +56,11 @@ export class ApiServiceService {
 
   addSubTask(id, subTask: any): Promise<any>{
     return this.http.post<any>(`${this.path}/task/${id}`, subTask).toPromise();
+  }
+
+  updateSubTask(subtask: any){
+    return this.http.put<any>(`${this.path}/subtask`, subtask).toPromise();
+
   }
 
 }

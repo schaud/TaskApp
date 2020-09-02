@@ -12,6 +12,7 @@
 
 <!-- First Tab -->
   <mat-tab label="Today's Tasks">
+
     <h2 class="tab-header">Tasks for Today : {{' ' + getCurrentDate()}}</h2>
         <div *ngIf="showSpinner" class="spinner-container">
           <mat-spinner  color="accent"></mat-spinner>
@@ -25,11 +26,17 @@
         <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
       </section>
     <mat-expansion-panel  *ngFor="let task of currentItemsToShow"
-            (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
+            (afterExpand)="selectedTask = task; expanded=true">
       <mat-expansion-panel-header class="expansion-container">
-        <mat-panel-title class="expansion-child task-name" >
-          {{task.task}}
+
+        <mat-panel-title class="expansion-child task-name">
+          <div class="task-caption-container">
+            <div>{{task.task}}</div>
+            <div *ngIf="task.type == 'structured'" class="task-caption">Structured Task</div>
+            <div *ngIf="task.type == 'free' || task.type == null" class="task-caption">Free Task</div>
+          </div>
         </mat-panel-title>
+
         <mat-panel-description class="expansion-child" >
           {{task.userid}}
         </mat-panel-description>
@@ -47,7 +54,10 @@
                 (click)="openTasksDialog()">View Subtasks</button>
         <button style="margin-left: 25px" mat-raised-button color="primary"
                 (click)="openDialog()">Add a Subtask</button>
+        <button style="margin-left: 25px" mat-raised-button color="primary"
+                (click)="editTasksDialog()">Edit Task</button>
       </p>
+
 
     </mat-expansion-panel>
     </mat-accordion>
@@ -66,7 +76,128 @@
 <!-- Second Tab -->
 
   <mat-tab label="Create a New Task">
-    <h2 class="tab-header">Create a Task</h2>
+    <div *ngIf="!structuredTask && !freeTask">
+    <h2 class="tab-header spinner-container">What type of task would you like to create?</h2>
+      <br>
+      <div class="spinner-container">
+    <button  mat-raised-button color="primary"
+             matTooltip="A free task should be used if the task lacks defined requirements.
+                        Such tasks allow for subtasks to be added after task creation, but also lack
+                        overall progression tracking."
+             (click)="freeTask=true">Free Task</button>
+        <span style="width: 200px"></span>
+    <button  mat-raised-button color="primary"
+             matTooltip="A structured task should be used if the task has well defined requirements.
+                        Such tasks have their subtasks created on task creation, but also
+                        consist of overall progression tracking."
+             (click)="structuredTask = true">Structured Task</button>
+      </div>
+    <br><br><br>
+    </div>
+
+
+    <div *ngIf="structuredTask">
+      <mat-horizontal-stepper>
+
+        <mat-step label="Add a Task">
+          <mat-form-field style="width: 300px">
+            <mat-label> Task Name </mat-label>
+            <input matInput  [(ngModel)]="TaskFormName" name="TaskFormName">
+          </mat-form-field>
+          <br>
+          <mat-form-field style="width: 300px">
+            <mat-label> Task Details </mat-label>
+            <textarea style="height: 100px" matInput  [(ngModel)]="TaskFormDetails" name="TaskFormDetails"></textarea>
+          </mat-form-field>
+          <br>
+          <button style="padding-top: 0" mat-raised-button color="primary" matStepperNext>Next: Subtasks</button>
+        </mat-step>
+
+        <mat-step label="Add Subtasks">
+      <h2 style="margin-left: 25px">Add Subtasks: {{TaskFormName}}</h2>
+       <p style="margin-left: 25px; margin-top: -20px">{{TaskFormDetails}}</p>
+
+<div class="flex-container">
+
+<div class="flex-child">
+<form>
+  <mat-form-field style="width: 300px">
+    <mat-label> Subtask Name </mat-label>
+    <input matInput  [(ngModel)]="subTaskFormName" name="subTaskFormName">
+  </mat-form-field>
+  <br>
+  <br>
+
+  <mat-form-field style="width: 300px">
+    <mat-label> Subtask Details </mat-label>
+    <textarea style="height: 100px" matInput [(ngModel)]="subTaskFormDetails" name="subTaskDetails"></textarea>
+  </mat-form-field>
+  <br>
+    <button mat-raised-button (click)="addSubTaskForm()" color="primary">Add Subtask</button>
+  <br><br>
+  <button  mat-raised-button color="accent" matStepperNext>Next: Review and Submit</button>
+
+  <br>
+  <br>
+</form>
+
+</div>
+
+  <div style="width: 450px; float:right" class="flex-child">
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let item of subTaskFormDisplay; let i=index" style="padding-top: 0; padding-bottom: 0; margin: 0">
+          <mat-expansion-panel-header style="padding-top: 0; padding-bottom: 0; margin: 0">
+            <mat-panel-title >
+              {{item.subtask}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          {{item.details}}
+          <br>
+          <button mat-raised-button color="warn" (click) = "removeSubTaskForm(i)" style="margin-top: 10px; float:right">Remove</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    <br>
+
+  </div>
+
+</div>
+
+
+        </mat-step>
+
+        <mat-step label="Review and Submit">
+          <h2>{{TaskFormName}}</h2>
+          <h3>{{TaskFormDetails}}</h3>
+          <br>
+          <div style="width: 450px">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let item of subTaskFormDisplay; let i=index" style="padding-top: 0; padding-bottom: 0; margin: 0">
+                <mat-expansion-panel-header style="padding-top: 0; padding-bottom: 0; margin: 0">
+                  <mat-panel-title >
+                    {{item.subtask}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                {{item.details}}
+                <br>
+                <button mat-raised-button color="warn" (click) = "removeSubTaskForm(i)" style="margin-top: 10px; float:right">Remove</button>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <br>
+
+          </div>
+
+          <br>
+          <button style="padding-top: 0" mat-raised-button color="primary" (click)="submitStructuredForm()">Submit</button>
+
+        </mat-step>
+
+      </mat-horizontal-stepper>
+
+    </div>
+
+
+    <div *ngIf="freeTask">
+    <h2 class="tab-header">Create a Free Task</h2>
 
     <form class="create-form">
 
@@ -96,9 +227,13 @@
       <button style="margin-bottom: 20px" (click)="submitTasks(); switchToToday(); getTasksToday(); " mat-raised-button color="primary">Submit Task</button>
       <br>
     </form>
+    </div>
 
 
   </mat-tab>
+
+
+    <!-- Third Tab: Regular User Only -->
 
     <mat-tab *ngIf="!isAdmin" label="Task History">
       <h2 class="tab-header">Your Previous Tasks</h2>
@@ -115,11 +250,17 @@
           <span class="mat-header-cell" mat-sort-header="date">Date</span>
           <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
         </section>
-          <mat-expansion-panel *ngFor="let task of currentItemsToShowName" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
+          <mat-expansion-panel *ngFor="let task of currentItemsToShowName" (afterExpand)="selectedTask = task; expanded=true">
             <mat-expansion-panel-header class="expansion-container">
-              <mat-panel-title class="expansion-child" >
-                {{task.task}}
+
+              <mat-panel-title class="expansion-child task-name">
+                <div class="task-caption-container">
+                  <div>{{task.task}}</div>
+                  <div *ngIf="task.type == 'structured'" class="task-caption">Structured Task</div>
+                  <div *ngIf="task.type == 'free' || task.type == null" class="task-caption">Free Task</div>
+                </div>
               </mat-panel-title>
+
               <mat-panel-description class="expansion-child" >
                 {{task.userid}}
               </mat-panel-description>
@@ -165,12 +306,12 @@
       <br>
     </form>
 
-    <p *ngIf="!exists_byName && complete && name && executed_name" style="margin-left: 20px;"> No tasks available or name does not exist.</p>
+    <p *ngIf="executed_name && !exists_byName">There are no tasks available for this name. </p>
+
 
     <div *ngIf="showSpinnerName" class="spinner-container">
       <mat-spinner  color="accent"></mat-spinner>
     </div>
-
 
     <mat-accordion>
       <section *ngIf="exists_byName" #nameSortAdmin matSort (matSortChange)="sortTasks($event, tasksByName)" class="mat-elevation-z2 mat-header-row">
@@ -179,10 +320,14 @@
         <span class="mat-header-cell" mat-sort-header="date">Date</span>
         <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
       </section>
-        <mat-expansion-panel *ngFor="let task of currentItemsToShowName" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
+        <mat-expansion-panel *ngFor="let task of currentItemsToShowName" (afterExpand)="selectedTask = task; expanded=true">
           <mat-expansion-panel-header class="expansion-container">
-            <mat-panel-title class="expansion-child" >
-              {{task.task}}
+            <mat-panel-title class="expansion-child task-name">
+              <div class="task-caption-container">
+                <div>{{task.task}}</div>
+                <div *ngIf="task.type == 'structured'" class="task-caption">Structured Task</div>
+                <div *ngIf="task.type == 'free' || task.type == null" class="task-caption">Free Task</div>
+              </div>
             </mat-panel-title>
             <mat-panel-description class="expansion-child" >
               {{task.userid}}
@@ -215,6 +360,7 @@
 
     </mat-accordion>
 
+
   </mat-tab>
 
 <!-- Fourth Tab -->
@@ -246,10 +392,14 @@
         <span class="mat-header-cell" mat-sort-header="date">Date</span>
         <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
       </section>
-    <mat-expansion-panel *ngFor="let task of currentItemsToShowDate" (afterExpand)="selectedTask = task; getSubTasks(task.id); expanded=true">
+    <mat-expansion-panel *ngFor="let task of currentItemsToShowDate" (afterExpand)="selectedTask = task; expanded=true">
       <mat-expansion-panel-header class="expansion-container">
-        <mat-panel-title class="expansion-child" >
-          {{task.task}}
+        <mat-panel-title class="expansion-child task-name">
+          <div class="task-caption-container">
+            <div>{{task.task}}</div>
+            <div *ngIf="task.type == 'structured'" class="task-caption">Structured Task</div>
+            <div *ngIf="task.type == 'free' || task.type == null" class="task-caption">Free Task</div>
+          </div>
         </mat-panel-title>
         <mat-panel-description class="expansion-child" >
           {{task.userid}}
@@ -285,29 +435,90 @@
     <mat-tab *ngIf="isAdmin" label="Custom Task Search">
       <h2 class="tab-header">Custom Task Search</h2>
 
-      <form class="create-form">
 
-        <mat-form-field class="create-task-name">
-          <mat-label>Enter a Name</mat-label>
-          <input [(ngModel)]="name" name="name" style="height: 50px" matInput placeholder="Enter a name to query" value="">
-        </mat-form-field>
-        <br>
-      </form>
+      <div class="flex-container">
 
-      <mat-form-field style="margin-left: 20px" appearance="fill">
-        <mat-label>Choose a date</mat-label>
-        <input matInput  [matDatepicker]="picker" [(ngModel)]="calDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker ></mat-datepicker>
-      </mat-form-field>
+        <div class="flex-child">
+          <mat-form-field style="margin-left: 20px" appearance="fill">
+            <mat-label>Choose a date</mat-label>
+            <input matInput  [matDatepicker]="picker" [(ngModel)]="calDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker ></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="flex-child" >
+          <form class="create-form">
+
+            <mat-form-field style="width: 250px">
+              <mat-label>Enter a Name</mat-label>
+              <input [(ngModel)]="name" name="name" style="height: 30px" matInput placeholder="Enter a name to query" value="">
+            </mat-form-field>
+            <br>
+          </form>
+        </div>
+
+        <div class="flex-child" *ngIf="customSearch.length > 0">
+          <button mat-raised-button (click)="date=convertDate(calDate); getTasksByDateAndName()"
+                  style="margin-left: 25px; bottom:5px; padding-left:15px; padding-right: 15px; width: 150px"  color="primary">Get Tasks</button>
+        </div>
+
+      </div>
+
+      <div *ngIf="customSearch.length === 0">
+        <button mat-raised-button (click)="date=convertDate(calDate); getTasksByDateAndName()"
+                style="margin-left: 25px; margin-bottom: 15px; padding-left:15px; padding-right: 15px; width: 150px"  color="primary">Get Tasks</button>
+      </div>
 
       <br>
 
+      <div *ngIf="showSpinnerCustom" class="spinner-container">
+        <mat-spinner  color="accent"></mat-spinner>
+      </div>
+      <p *ngIf="validUser === false" style="margin-left: 25px; color: red">The entered name is not a user.</p>
+      <p *ngIf="!exists_custom && complete" style="margin-left: 25px">No tasks match the query above.</p>
 
-      <button mat-raised-button (click)="date=convertDate(calDate); getTasksByDate()"
-              style="margin-left: 20px; padding-left:15px; padding-right: 15px; padding-top: 0"  color="primary">Get Tasks</button>
-      <br>
-      <br>
+      <mat-accordion>
+        <section *ngIf="customSearch.length != 0" #customSort matSort (matSortChange)="sortTasks($event, customSearch)" class="mat-elevation-z2 mat-header-row">
+          <span class="mat-header-cell" mat-sort-header="task">Task</span>
+          <span class="mat-header-cell" mat-sort-header="name">Creator</span>
+          <span class="mat-header-cell" mat-sort-header="date">Date</span>
+          <span class="mat-header-cell" mat-sort-header="progress">Progress</span>
+        </section>
+        <mat-expansion-panel *ngFor="let task of currentItemsToShowCustom" (afterExpand)="selectedTask = task; expanded=true">
+          <mat-expansion-panel-header class="expansion-container">
+            <mat-panel-title class="expansion-child" >
+              {{task.task}}
+            </mat-panel-title>
+            <mat-panel-description class="expansion-child" >
+              {{task.userid}}
+            </mat-panel-description>
+            <mat-panel-description class="expansion-child" >
+              {{task.taskdate}}
+            </mat-panel-description>
+            <mat-panel-description class="expansion-child">
+              {{task.progress}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>{{task.details}}</p>
+          <br>
+          <p style="margin-top:-15px; float:right">
+            <button style="margin-left: 25px" mat-raised-button color="primary"
+                    (click)="openTasksDialog()">View Subtasks</button>
+            <button style="margin-left: 25px" mat-raised-button color="primary"
+                    (click)="openDialog()">Add a Subtask</button>
+          </p>
+        </mat-expansion-panel>
+        <mat-paginator *ngIf="customSearch.length != 0" #paginatorCustom
+                       (page) = "onPageChangeCustom($event)"
+                       [length]="dataSourceCustom?.data.length"
+                       [pageIndex]="0"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[4, 8, 12, 16]">
+        </mat-paginator>
+      </mat-accordion>
+
+
 
 
 

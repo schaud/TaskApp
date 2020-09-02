@@ -30,8 +30,9 @@ span.psa{
 }
 
 .flex-child:first-child {
-  margin-right: 20px;
+  margin-right: 50px;
 }
+
 
 /*Material Tab Properties*/
 .mat-tab-group{
@@ -46,6 +47,10 @@ span.psa{
   border-radius: 5px;
   /*min-height: 660px;*/
   height: fit-content;
+}
+
+.spacer{
+  flex: 1 1 auto;
 }
 
 
@@ -183,9 +188,6 @@ form{
   position: absolute;
 }
 
-mat-spinner{
-}
-
 
 @media (max-width: 600px){
   /*mat-tab-group{*/
@@ -259,6 +261,14 @@ mat-row, .mat-header-row {
 .task-details{
   font-weight: 500 ;
 }
+
+.task-caption{
+  color: gray;
+  margin-top: -10px;
+  font-size: 12px;
+}
+
+
 
 
 

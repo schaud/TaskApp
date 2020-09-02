@@ -2,6 +2,8 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ApiServiceService} from '../../../services/api-service.service';
 import saveAs from 'save-as';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {Subtask} from '@src/app/models/Subtask';
 
 @Component({
   selector: 'app-subtask-details',
@@ -15,9 +17,9 @@ export class SubtaskDetailsComponent implements OnInit {
   showSpinner;
   complete;
   subTasks: any = [
-    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'},
-    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'},
-    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder'}
+    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder', editable : false},
+    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder', editable: false},
+    {id: "holder", subtask: "holder", details: "holder", taskid: "holder", date: "YYYY-MM-DD", progress: 'holder', editable: false}
   ];
   usernames: any = [{id: "holder", name: "holder", email: "holder"}];
 
@@ -66,6 +68,11 @@ export class SubtaskDetailsComponent implements OnInit {
     console.log(this.subTasks)
     this.sortData(this.subTasks);
     await this.swapIdToName(this.subTasks);
+
+    for (let subTask of this.subTasks){
+      subTask.editable = false;
+    }
+
     this.complete = true;
     this.showSpinner = false;
     return this.subTasks;
@@ -74,6 +81,23 @@ export class SubtaskDetailsComponent implements OnInit {
   close(){
     this.dialogRef.close();
   }
+
+  toggleEditable(index){
+    this.subTasks[index].editable = !this.subTasks[index].editable;
+  }
+
+  async updateSubTask(index){
+
+    let subTask = this.subTasks[index];
+    delete subTask['editable'];
+    await this.apiservice.updateSubTask(subTask)
+
+    await this.getSubTasks(this.data.task.id)
+
+  }
+
+
+
 
   downloadSubTasks() {
     let blob = new Blob(

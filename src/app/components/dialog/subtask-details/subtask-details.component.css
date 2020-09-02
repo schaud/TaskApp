@@ -33,4 +33,12 @@
   justify-content: center;
 }
 
+.subtask-details{
+  width: 100%;
+}
+
+textarea{
+  resize: none;
+}
+
 

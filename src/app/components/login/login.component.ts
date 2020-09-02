@@ -7,6 +7,7 @@ import {NewpasswordComponent} from '../dialog/newpassword/newpassword.component'
 import {MatDialog} from '@angular/material/dialog';
 import {VersionComponent} from '../dialog/version/version.component';
 import {ForgotComponent} from '../dialog/forgot/forgot.component';
+import {ApiServiceService} from '@src/app/services/api-service.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,8 @@ export class LoginComponent implements OnInit {
   loggedIn: boolean = false;
 
 
-  constructor(private auth: AuthorizationService, private router: Router, public dialog: MatDialog) { }
+  constructor(private auth: AuthorizationService, private router: Router, public dialog: MatDialog,
+  private api: ApiServiceService ) { }
 
   ngOnInit(): void {
     this.auth.sharedUser.subscribe(user => this.user = user);
@@ -35,9 +37,18 @@ export class LoginComponent implements OnInit {
 
 
   async onSubmit() {
+    let allUsers = await this.api.getAllUsers();
+    let currentUser
 
     await this.auth.signIn(this.emailAddress, this.pass).subscribe((data) => {
-      localStorage.setItem('UserEmail', this.emailAddress);
+      for (let user of allUsers){
+        if (user.email == this.emailAddress){
+           currentUser = user;
+        }
+      }
+
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      localStorage.setItem('userEmail', this.emailAddress);
       this.user = this.emailAddress;
       this.auth.sendUser(this.user);
       this.loggedIn = true;
